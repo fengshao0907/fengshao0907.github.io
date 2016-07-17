@@ -84,16 +84,19 @@
 
 
 
-<meta name="description" content="There are no two identical leaves in the world.">
+<meta name="description" content="Redis 协议 &amp;amp;&amp;amp;  –pipe
+Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis 协议 &&  --pipe">
 <meta property="og:url" content="http://yoursite.com/2016/07/17/Redis-协议-pipe/index.html">
 <meta property="og:site_name" content="Mr岳的技术博客">
-<meta property="og:description" content="There are no two identical leaves in the world.">
-<meta property="og:updated_time" content="2016-07-17T13:25:39.000Z">
+<meta property="og:description" content="Redis 协议 &amp;amp;&amp;amp;  –pipe
+Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
+<meta property="og:updated_time" content="2016-07-17T14:01:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis 协议 &&  --pipe">
-<meta name="twitter:description" content="There are no two identical leaves in the world.">
+<meta name="twitter:description" content="Redis 协议 &amp;amp;&amp;amp;  –pipe
+Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
 
 
 
@@ -332,7 +335,115 @@
       
 
       
-        
+        <h1 id="Redis-协议-amp-amp-–pipe"><a href="#Redis-协议-amp-amp-–pipe" class="headerlink" title="Redis 协议 &amp;&amp;  –pipe"></a>Redis 协议 &amp;&amp;  –pipe</h1><blockquote>
+<p>Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。<br><a id="more"></a></p>
+</blockquote>
+<p>[TOC]</p>
+<hr>
+<h2 id="Redis协议规范"><a href="#Redis协议规范" class="headerlink" title="Redis协议规范"></a>Redis协议规范</h2><p>Redis客户端和服务端通信使用的协议成为RESP(Redis序列化协议)。该协议是专门为Redis设计的，当然也可以用于其他 client-server 的软件项目。</p>
+<p>RESP 是一种基于以下几点考虑上的折中协议</p>
+<ul>
+<li>简单实现</li>
+<li>快速解析</li>
+<li>人类可读</li>
+</ul>
+<hr>
+<p>RESP 能够将不同的数据类型序列化，比如 整型、字符串、数组，也有一个特定的错误类型。请求从客户端发送到服务器的redis作为代表该命令的参数来执行字符串数组。Redis使用特定数据类型来响应客户端请求。</p>
+<p>RESP 是一种二进制安全的，并且不需要在进程间批量传输的协议，因为它使用前缀长度去批量数据传输。</p>
+<blockquote>
+<p>这里概述的协议只用户客户端-服务端通信。Redis Cluster 使用的是一种旨在节点间消息交换的不同的二进制协议。</p>
+</blockquote>
+<hr>
+<p>##网络层</p>
+<p>Redis Client通过 建立一个TCP 连接到端口6379 来连接Redis Server。</p>
+<p>然而 RESP 在技术上并非特定的TCP，在Redis 协议仅仅被用在与TCP建立连接(或者等效的面向流的连接，如<br>Unix Sockets)的上下文中。</p>
+<hr>
+<h2 id="请求响应模型"><a href="#请求响应模型" class="headerlink" title="请求响应模型"></a>请求响应模型</h2><p>Redis 接收由不同参数组成的命令。一旦命令被接收到，它就会被服务端处理并且会发送响应给客户端。</p>
+<p>这可能是最简单的模型，然而有另外两种情况：</p>
+<ul>
+<li>Redis 支持管道流。因此 它使客户端一次发送多个命令成为可能，之后等待答复/响应。</li>
+<li>当一个 Redis 客户端订阅一个Pub/Sub channel 时，协议就会转换语义变成一种push协议，此时客户端不再需要发送命令，因为服务器会自动给客户端发送消息，这些消息会被尽可能快的收到。</li>
+</ul>
+<p>不包括以上两点，Redis 就是一个简单的 请求-响应 协议。</p>
+<hr>
+<h2 id="协议描述"><a href="#协议描述" class="headerlink" title="协议描述"></a>协议描述</h2><p>Redis 1.2 时就介绍过 RESP，但是从 Redis 2.0 开始，他成为一种与 Redis Server 通信的标准协议。这个协议就是在 Redis 客户端要实现的协议。</p>
+<p>RESP 实际上是一个支持以下数据类型序列化的协议：简单字符串、整型、字符串、数组、错误。</p>
+<p>RESP 作为一种请求-响应协议以以下方式被用在 Redis 中：</p>
+<ul>
+<li>RESP 作为一个大字符串数组 被Client 发送命令到 Redis Server 端</li>
+<li>Server 端 用根据命令实现的其中的一种 RESP 类型来响应Client 请求。</li>
+</ul>
+<p>在 RESP 协议中，数据类型取决于第一个字节：</p>
+<ul>
+<li>对于简单字符串，响应的第一个字节是 “+”</li>
+<li>对于错误，响应的第一个字节是 “-“</li>
+<li>对于整型，响应的第一个字节是 “:”</li>
+<li>对于批量字符串，响应的第一个字节是 “$”</li>
+<li>对于数组，响应的第一个字节是 “*”</li>
+</ul>
+<p>此外，RESP 可以使用一个特定的批量字符串或数组的特殊变化来表示一个空值。<br>RESP 协议的不同部分都终止了与”\r\n”CRLF）。</p>
+<hr>
+<h2 id="简单字符串"><a href="#简单字符串" class="headerlink" title="简单字符串"></a>简单字符串</h2><p>简单字符串的编码方式如下：+字符之后紧跟着一个不包含CR或LF字符的字符串(不允许换行)，终止符是 CRLF(“\r\n”).</p>
+<p>简单字符串是用来传输非二进制安全字符串的最小开销。例如 Redis 恢复OK时，只需要用以下5个字节进行编码 “+OK\r\n”。</p>
+<p>为了发送二进制安全的字符串，使用 RESP 批量字符串来代替。当 Redis 回复/响应 一个简单字符串时，客户端应该返回到调用一个由第一个字符后的”+”为结尾的字符串的字符串，不包含终止 CRLF 字节。</p>
+<h2 id="Redis-Errors"><a href="#Redis-Errors" class="headerlink" title="Redis Errors"></a><code>Redis Errors</code></h2><hr>
+<p><a href="https://github.com/MSOpenTech/redis/releases" target="_blank" rel="external">Redis Windows版本下载</a></p>
+<p><strong>马克飞象</strong>是一款专为印象笔记（Evernote）打造的Markdown编辑器，通过精心的设计与技术实现，配合印象笔记强大的存储和同步功能，带来前所未有的书写体验。特点概述：</p>
+<ul>
+<li><strong>功能丰富</strong> ：支持高亮代码块、<em>LaTeX</em> 公式、流程图，本地图片以及附件上传，甚至截图粘贴，工作学习好帮手；</li>
+<li><strong>得心应手</strong> ：简洁高效的编辑器，提供[桌面客户端][1]以及[离线Chrome App][2]，支持移动端 Web；</li>
+<li><strong>深度整合</strong> ：支持选择笔记本和添加标签，支持从印象笔记跳转编辑，轻松管理。</li>
+</ul>
+<hr>
+<h2 id="Markdown简介"><a href="#Markdown简介" class="headerlink" title="Markdown简介"></a>Markdown简介</h2><blockquote>
+<p>Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档，然后转换成格式丰富的HTML页面。    —— <a href="https://zh.wikipedia.org/wiki/Markdown" target="_blank" rel="external">维基百科</a></p>
+</blockquote>
+<p>正如您在阅读的这份文档，它使用简单的符号标识不同的标题，将某些文字标记为<strong>粗体</strong>或者<em>斜体</em>，创建一个<a href="http://www.example.com" target="_blank" rel="external">链接</a>或一个脚注[^demo]。下面列举了几个高级功能，更多语法请按<code>Cmd + /</code>查看帮助。 </p>
+<h3 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@requires_authorization</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">somefunc</span><span class="params">(param1=<span class="string">''</span>, param2=<span class="number">0</span>)</span>:</span></div><div class="line">    <span class="string">'''A docstring'''</span></div><div class="line">    <span class="keyword">if</span> param1 &gt; param2: <span class="comment"># interesting</span></div><div class="line">        <span class="keyword">print</span> <span class="string">'Greater'</span></div><div class="line">    <span class="keyword">return</span> (param2 - param1 + <span class="number">1</span>) <span class="keyword">or</span> <span class="keyword">None</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomeClass</span>:</span></div><div class="line">    <span class="keyword">pass</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>message = <span class="string">'''interpreter</span></div><div class="line"><span class="meta">... </span>prompt'''</div></pre></td></tr></table></figure>
+<h3 id="LaTeX-公式"><a href="#LaTeX-公式" class="headerlink" title="LaTeX 公式"></a>LaTeX 公式</h3><p>可以创建行内公式，例如 $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$。或者块级公式：</p>
+<p>$$    x = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$</p>
+<h3 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h3><table>
+<thead>
+<tr>
+<th style="text-align:left">Item</th>
+<th style="text-align:right">Value</th>
+<th style="text-align:center">Qty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Computer</td>
+<td style="text-align:right">1600 USD</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td style="text-align:left">Phone</td>
+<td style="text-align:right">12 USD</td>
+<td style="text-align:center">12</td>
+</tr>
+<tr>
+<td style="text-align:left">Pipe</td>
+<td style="text-align:right">1 USD</td>
+<td style="text-align:center">234</td>
+</tr>
+</tbody>
+</table>
+<h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">st=&gt;start: Start</div><div class="line">e=&gt;end</div><div class="line">op=&gt;operation: My Operation</div><div class="line">cond=&gt;condition: Yes or No?</div><div class="line"></div><div class="line">st-&gt;op-&gt;cond</div><div class="line">cond(yes)-&gt;e</div><div class="line">cond(no)-&gt;op</div></pre></td></tr></table></figure>
+<p>以及时序图:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Alice-&gt;Bob: Hello Bob, how are you?</div><div class="line">Note right of Bob: Bob thinks</div><div class="line">Bob--&gt;Alice: I am good thanks!</div></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>提示：</strong>想了解更多，请查看<strong>流程图</strong>[语法][3]以及<strong>时序图</strong>[语法][4]。</p>
+</blockquote>
+<h3 id="复选框"><a href="#复选框" class="headerlink" title="复选框"></a>复选框</h3><p>使用 <code>- [ ]</code> 和 <code>- [x]</code> 语法可以创建复选框，实现 todo-list 等功能。例如：</p>
+<ul>
+<li>[x] 已完成事项</li>
+<li>[ ] 待办事项1</li>
+<li>[ ] 待办事项2</li>
+</ul>
+<blockquote>
+<p><strong>注意：</strong>目前支持尚不完全，在印象笔记中勾选复选框是无效、不能同步的，所以必须在<strong>马克飞象</strong>中修改 Markdown 原文才可生效。下个版本将会全面支持。</p>
+</blockquote>
+
       
     </div>
 
@@ -537,7 +648,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis-协议-amp-amp-–pipe"><span class="nav-number">1.</span> <span class="nav-text">Redis 协议 &&  –pipe</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis协议规范"><span class="nav-number">1.1.</span> <span class="nav-text">Redis协议规范</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求响应模型"><span class="nav-number">1.2.</span> <span class="nav-text">请求响应模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#协议描述"><span class="nav-number">1.3.</span> <span class="nav-text">协议描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单字符串"><span class="nav-number">1.4.</span> <span class="nav-text">简单字符串</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis-Errors"><span class="nav-number">1.5.</span> <span class="nav-text">Redis Errors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Markdown简介"><span class="nav-number">1.6.</span> <span class="nav-text">Markdown简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码块"><span class="nav-number">1.6.1.</span> <span class="nav-text">代码块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LaTeX-公式"><span class="nav-number">1.6.2.</span> <span class="nav-text">LaTeX 公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#表格"><span class="nav-number">1.6.3.</span> <span class="nav-text">表格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流程图"><span class="nav-number">1.6.4.</span> <span class="nav-text">流程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复选框"><span class="nav-number">1.6.5.</span> <span class="nav-text">复选框</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
         </section>
