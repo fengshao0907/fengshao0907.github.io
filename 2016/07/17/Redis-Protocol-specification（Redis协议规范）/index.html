@@ -84,16 +84,19 @@
 
 
 
-<meta name="description" content="GitHub Page 建立博客Github作为现在最流行的代码仓库，已经得到很多大公司和项目的青睐，比如Alibaba、Spring等。为使项目更方便的被人理解，介绍页面少不了，甚至会需要完整的文档站，Github替你想到了这一点，他提供了Github Pages服务。不仅可以方便的为项目建立介绍站点，也可以用来建立个人博客。">
+<meta name="description" content="Redis 协议 &amp;amp;&amp;amp;  –pipe
+Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="GitHub Pages 博客搭建">
-<meta property="og:url" content="http://yoursite.com/2016/07/11/GitHub-Pages-博客搭建/index.html">
+<meta property="og:title" content="Redis Protocol specification（Redis协议规范）">
+<meta property="og:url" content="http://yoursite.com/2016/07/17/Redis-Protocol-specification（Redis协议规范）/index.html">
 <meta property="og:site_name" content="Mr岳的技术博客">
-<meta property="og:description" content="GitHub Page 建立博客Github作为现在最流行的代码仓库，已经得到很多大公司和项目的青睐，比如Alibaba、Spring等。为使项目更方便的被人理解，介绍页面少不了，甚至会需要完整的文档站，Github替你想到了这一点，他提供了Github Pages服务。不仅可以方便的为项目建立介绍站点，也可以用来建立个人博客。">
-<meta property="og:updated_time" content="2016-07-11T08:16:42.000Z">
+<meta property="og:description" content="Redis 协议 &amp;amp;&amp;amp;  –pipe
+Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
+<meta property="og:updated_time" content="2016-07-17T15:14:39.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="GitHub Pages 博客搭建">
-<meta name="twitter:description" content="GitHub Page 建立博客Github作为现在最流行的代码仓库，已经得到很多大公司和项目的青睐，比如Alibaba、Spring等。为使项目更方便的被人理解，介绍页面少不了，甚至会需要完整的文档站，Github替你想到了这一点，他提供了Github Pages服务。不仅可以方便的为项目建立介绍站点，也可以用来建立个人博客。">
+<meta name="twitter:title" content="Redis Protocol specification（Redis协议规范）">
+<meta name="twitter:description" content="Redis 协议 &amp;amp;&amp;amp;  –pipe
+Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
 
 
 
@@ -114,9 +117,9 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2016/07/11/GitHub-Pages-博客搭建/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/07/17/Redis-Protocol-specification（Redis协议规范）/"/>
 
-  <title> GitHub Pages 博客搭建 | Mr岳的技术博客 </title>
+  <title> Redis Protocol specification（Redis协议规范） | Mr岳的技术博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -276,7 +279,7 @@
             
             
               
-                GitHub Pages 博客搭建
+                Redis Protocol specification（Redis协议规范）
               
             
           </h1>
@@ -288,8 +291,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-07-11T15:13:24+08:00" content="2016-07-11">
-              2016-07-11
+            <time itemprop="dateCreated" datetime="2016-07-17T23:13:52+08:00" content="2016-07-17">
+              2016-07-17
             </time>
           </span>
 
@@ -299,8 +302,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/11/GitHub-Pages-博客搭建/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/11/GitHub-Pages-博客搭建/" itemprop="commentsCount"></span>
+                <a href="/2016/07/17/Redis-Protocol-specification（Redis协议规范）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/17/Redis-Protocol-specification（Redis协议规范）/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -310,7 +313,7 @@
 
           
           
-             <span id="/2016/07/11/GitHub-Pages-博客搭建/" class="leancloud_visitors" data-flag-title="GitHub Pages 博客搭建">
+             <span id="/2016/07/17/Redis-Protocol-specification（Redis协议规范）/" class="leancloud_visitors" data-flag-title="Redis Protocol specification（Redis协议规范）">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -332,86 +335,114 @@
       
 
       
-        <h2 id="GitHub-Page-建立博客"><a href="#GitHub-Page-建立博客" class="headerlink" title="GitHub Page 建立博客"></a>GitHub Page 建立博客</h2><p>Github作为现在最流行的代码仓库，已经得到很多大公司和项目的青睐，比如<a href="https://github.com/alibaba#1alibaba开源" target="_blank" rel="external">Alibaba</a>、<a href="https://github.com/spring-projects#2Spring" target="_blank" rel="external">Spring</a>等。为使项目更方便的被人理解，介绍页面少不了，甚至会需要完整的文档站，Github替你想到了这一点，他提供了<a href="https://pages.github.com/#3githubPages" target="_blank" rel="external">Github Pages</a>服务。不仅可以方便的为项目建立介绍站点，也可以用来建立个人博客。<br><a id="more"></a></p>
+        <h1 id="Redis-协议-amp-amp-–pipe"><a href="#Redis-协议-amp-amp-–pipe" class="headerlink" title="Redis 协议 &amp;&amp;  –pipe"></a>Redis 协议 &amp;&amp;  –pipe</h1><blockquote>
+<p>Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。</p>
+</blockquote>
+<a id="more"></a>
 <hr>
-<h2 id="搭建博客初衷"><a href="#搭建博客初衷" class="headerlink" title="搭建博客初衷"></a>搭建博客初衷</h2><blockquote>
+<h2 id="Redis协议规范"><a href="#Redis协议规范" class="headerlink" title="Redis协议规范"></a>Redis协议规范</h2><p>Redis客户端和服务端通信使用的协议成为RESP(Redis序列化协议)。该协议是专门为Redis设计的，当然也可以用于其他 client-server 的软件项目。</p>
+<p>RESP 是一种基于以下几点考虑上的折中协议</p>
 <ul>
-<li>拥有属于自己的个人博客</li>
-<li><strong>发布技术感想、技术沉淀落地</strong></li>
-<li>记录自己的生活</li>
-<li>免费！免费！免费！</li>
-<li>github是趋势，学习使用Git</li>
-</ul>
-</blockquote>
-<hr>
-<h2 id="GitHub-Pages"><a href="#GitHub-Pages" class="headerlink" title="GitHub Pages"></a>GitHub Pages</h2><h3 id="Github-Pages-是什么"><a href="#Github-Pages-是什么" class="headerlink" title="Github Pages 是什么"></a>Github Pages 是什么</h3><pre><code>github Pages可以被认为是用户编写的、托管在github上的静态网页。
-</code></pre><h3 id="Github-Pages有以下几个优点："><a href="#Github-Pages有以下几个优点：" class="headerlink" title="Github Pages有以下几个优点："></a>Github Pages有以下几个优点：</h3><ol>
-<li>轻量级的博客系统，没有麻烦的配置</li>
-<li>使用标记语言，比如Markdown</li>
-<li>无需自己搭建服务器</li>
-<li>根据Github的限制，对应的每个站有300MB空间</li>
-<li>可以绑定自己的域名</li>
-</ol>
-<h3 id="Github-Pages有以下几个缺点："><a href="#Github-Pages有以下几个缺点：" class="headerlink" title="Github Pages有以下几个缺点："></a>Github Pages有以下几个缺点：</h3><ul>
-<li>使用Jekyll模板系统，相当于静态页发布，适合博客，文档介绍等。</li>
-<li>动态程序的部分相当局限，比如没有评论，不过还好我们有解决方案</li>
-<li>基于Git，很多东西需要动手，不像Wordpress有强大的后台</li>
+<li>简单实现</li>
+<li>快速解析</li>
+<li>人类可读</li>
 </ul>
 <hr>
-<h2 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h2><h3 id="配置和使用Github"><a href="#配置和使用Github" class="headerlink" title="配置和使用Github"></a>配置和使用Github</h3><ol>
-<li><a href="https://git-scm.com/book/zh/v2" target="_blank" rel="external"> 学习使用 Git</a></li>
-<li><a href="https://github.com" target="_blank" rel="external"> 申请 GitHub 账号 </a></li>
-<li><a href="https://pages.github.com/" target="_blank" rel="external"> Github Pages创建站点仓库</a></li>
-<li><p>配置SSH keys</p>
-<h4 id="配置SSH-KEYS"><a href="#配置SSH-KEYS" class="headerlink" title="配置SSH KEYS"></a>配置SSH KEYS</h4><p>首先我们需要检查你电脑上现有的ssh key：</p>
-</li>
-</ol>
+<p>RESP 能够将不同的数据类型序列化，比如 整型、字符串、数组，也有一个特定的错误类型。请求从客户端发送到服务器的redis作为代表该命令的参数来执行字符串数组。Redis使用特定数据类型来响应客户端请求。</p>
+<p>RESP 是一种二进制安全的，并且不需要在进程间批量传输的协议，因为它使用前缀长度去批量数据传输。</p>
 <blockquote>
-<p>$ cd ~/. ssh 检查本机的ssh密钥</p>
-</blockquote>
-<p>生成新的SSH Key：</p>
-<blockquote>
-<p>$ ssh-keygen -t rsa -C “这里可以随意写，主要是注释功能，也可以写邮箱地址”<br>Generating public/private rsa key pair.<br>Enter file in which to save the key (/Users/your_user_directory/.ssh/id_rsa):&lt;此处可以写生成文件的名称，比如我的 id_rsa_hexo&gt;</p>
-</blockquote>
-<p>然后系统会要你输入密码：</p>
-<blockquote>
-<p>$ Enter passphrase (empty for no passphrase):[输入加密串]</p>
-<p>$ Enter same passphrase again:[再次输入加密串]</p>
+<p>这里概述的协议只用户客户端-服务端通信。Redis Cluster 使用的是一种旨在节点间消息交换的不同的二进制协议。</p>
 </blockquote>
 <hr>
-<h3 id="添加SSH-Key到GitHub"><a href="#添加SSH-Key到GitHub" class="headerlink" title="添加SSH Key到GitHub"></a>添加SSH Key到GitHub</h3><ol>
-<li>登陆github系统。点击右上角的 Account Settings—&gt;SSH Public keys —&gt; add another public keys</li>
-<li>把你本地生成的密钥复制到里面（key文本框中）， 点击 add key 就ok了</li>
-</ol>
-<p><a href="https://help.github.com/articles/generating-an-ssh-key/" target="_blank" rel="external">参考</a><br><a href="https://help.github.com/articles/error-permission-denied-publickey/" target="_blank" rel="external">常见问题及解决方法</a></p>
-<h3 id="安装Node"><a href="#安装Node" class="headerlink" title="安装Node"></a>安装Node</h3><p>我的是Mac环境，因此使用的是brew。</p>
+<h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><p>Redis Client通过 建立一个TCP 连接到端口6379 来连接Redis Server。</p>
+<p>然而 RESP 在技术上并非特定的TCP，在Redis 协议仅仅被用在与TCP建立连接(或者等效的面向流的连接，如<br>Unix Sockets)的上下文中。</p>
+<hr>
+<h2 id="请求响应模型"><a href="#请求响应模型" class="headerlink" title="请求响应模型"></a>请求响应模型</h2><p>Redis 接收由不同参数组成的命令。一旦命令被接收到，它就会被服务端处理并且会发送响应给客户端。</p>
+<p>这可能是最简单的模型，然而有另外两种情况：</p>
+<ul>
+<li>Redis 支持管道流。因此 它使客户端一次发送多个命令成为可能，之后等待答复/响应。</li>
+<li>当一个 Redis 客户端订阅一个Pub/Sub channel 时，协议就会转换语义变成一种push协议，此时客户端不再需要发送命令，因为服务器会自动给客户端发送消息，这些消息会被尽可能快的收到。</li>
+</ul>
+<p>不包括以上两点，Redis 就是一个简单的 请求-响应 协议。</p>
+<hr>
+<h2 id="协议描述"><a href="#协议描述" class="headerlink" title="协议描述"></a>协议描述</h2><p>Redis 1.2 时就介绍过 RESP，但是从 Redis 2.0 开始，他成为一种与 Redis Server 通信的标准协议。这个协议就是在 Redis 客户端要实现的协议。</p>
+<p>RESP 实际上是一个支持以下数据类型序列化的协议：简单字符串、整型、字符串、数组、错误。</p>
+<p>RESP 作为一种请求-响应协议以以下方式被用在 Redis 中：</p>
+<ul>
+<li>RESP 作为一个大字符串数组 被Client 发送命令到 Redis Server 端</li>
+<li>Server 端 用根据命令实现的其中的一种 RESP 类型来响应Client 请求。</li>
+</ul>
+<p>在 RESP 协议中，数据类型取决于第一个字节：</p>
+<ul>
+<li>对于简单字符串，响应的第一个字节是 “+”</li>
+<li>对于错误，响应的第一个字节是 “-“</li>
+<li>对于整型，响应的第一个字节是 “:”</li>
+<li>对于批量字符串，响应的第一个字节是 “$”</li>
+<li>对于数组，响应的第一个字节是 “*”</li>
+</ul>
+<p>此外，RESP 可以使用一个特定的批量字符串或数组的特殊变化来表示一个空值。<br>RESP 协议的不同部分都终止了与”\r\n”CRLF）。</p>
+<hr>
+<h2 id="RESP-Simple-Strings"><a href="#RESP-Simple-Strings" class="headerlink" title="RESP Simple Strings"></a>RESP Simple Strings</h2><p>简单字符串的编码方式如下：+字符之后紧跟着一个不包含CR或LF字符的字符串(不允许换行)，终止符是 CRLF(“\r\n”).</p>
+<p>简单字符串是用来传输非二进制安全字符串的最小开销。例如 Redis 恢复OK时，只需要用以下5个字节进行编码 “+OK\r\n”。</p>
+<p>为了发送二进制安全的字符串，使用 RESP 批量字符串来代替。当 Redis 回复/响应 一个简单字符串时，客户端应该返回到调用一个由第一个字符后的”+”为结尾的字符串的字符串，不包含终止 CRLF 字节。</p>
+<h2 id="RESP-Errors"><a href="#RESP-Errors" class="headerlink" title="RESP Errors"></a>RESP Errors</h2><p>RESP Errors 是一个特殊的数据类型。其实错误类型 跟 RESP 简单字符串很像，只不过它的第一个字符是一个减号 “-“ ，而不是 “+”。简单字符串 和 Errors 在 RESP 中真正的区别是 Errors 在客户端被作为异常处理，并且构成 Errors 类型的字符串就是错误信息本身。<br>基本格式如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"-Error Message\r\n"</span></div></pre></td></tr></table></figure></p>
+<p>错误响应只会在发生错误时发送，例如如果你试图执行一个对错误数据类型的操作，或者执行一个不存在的命令，等等。当收到错误响应时，应该由客户端引发一个异常。<br>以下就是错误响应的示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-ERR unknown command <span class="string">'foobar'</span></div><div class="line">-WRONGTYPE Operation against a key holding the wrong kind of value</div></pre></td></tr></table></figure></p>
 <blockquote>
-<p> brew install node</p>
+<p>第一个词后的”-“，到第一个空格或换行，代表返回的错误类型。这个仅仅是 Redis 的一个约定并不是 RESP Errors 错误格式的一部分。</p>
 </blockquote>
-<p>node的模块管理工具是npm，用brew安装node的时候，npm会默认安装。</p>
-<h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><blockquote>
-<p> npm cache clean 清理npm缓存<br> npm config set registry=”<a href="http://registry.cnpmjs.org" target="_blank" rel="external">http://registry.cnpmjs.org</a>“<br> npm install  node-pre-gyp -g<br> npm install  hero-cli -g</p>
-</blockquote>
-<h3 id="发布到-Github-个人站点"><a href="#发布到-Github-个人站点" class="headerlink" title="发布到 Github 个人站点"></a>发布到 Github 个人站点</h3><p>克隆主题到自己的博客目录下</p>
+<p>例如，ERR是一般错误，而WRONGTYPE是一个更加具体的错苏，意味着客户端试图执行一个针对错误数据类型的操作。这被称为一个错误前缀，是一种允许客户端理解服务端返回的错误类型的方式，它不依赖于给定的确切消息。<br>客户端实现可能会为不同的错误返回不同的异常类型，或者可能提供一个通用的方法来捕获异常，该方法直接把错误的名称作为字符串提供类调用方。<br>然而，这样的功能不应该被认为是最关重要的，因为它很少被用到，而且客户端实现可能只是返回一个通用的错误条件，例如 false。</p>
+<hr>
+<h2 id="RESP-Integers"><a href="#RESP-Integers" class="headerlink" title="RESP Integers"></a>RESP Integers</h2><p>这种类型仅仅只用 CRLF 终止符代表一个整数，以”:” 作为前缀。如： </p>
 <blockquote>
-<p> git clone <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">https://github.com/iissnan/hexo-theme-next</a> themes/next</p>
+<p>“:0\r\n”<br>“:1000\r\n” </p>
 </blockquote>
-<p>编辑 _config.yml (在 H:\hexo 下)。你在部署时，要把下面的 zippera 都换成你的账号名。</p>
+<p>这些都是整数响应。<br>很多 Redis 命令返回 RESP整数，向 INCR、LLEN 、LASTSAVE。<br>返回的整数没有特殊的意义，只是一个INCR的数字递增或者是执行LASTSAVE的Unix 时间等等。但是，返回的整数必须保证是在一个<strong>有符号的64位整数范围内</strong>。整型响应被广泛使用以返回 TURE 或 FALSE。比如像 EXISTS 、 SISMEMBER命令返回1表示 TURE，0 表示 FALSE。<br>其他命令比如像 SADD、SETNX，如果操作执行成功则返回1，否则返回0。<br>以下命令将返回整数响应：</p>
 <blockquote>
-<p>deploy:<br>  type: github<br>  repository: <a href="https://github.com/xxxx/xxxx.github.com.git" target="_blank" rel="external">https://github.com/xxxx/xxxx.github.com.git</a><br>  branch: master</p>
+<p>SETNX, DEL, EXISTS, INCR, INCRBY, DECR, DECRBY, DBSIZE, LASTSAVE,RENAMENX, MOVE, LLEN, SADD, SREM, SISMEMBER, SCARD。</p>
 </blockquote>
-<p>执行下列指令即可完成部署。</p>
-<blockquote>
-<p>hexo generate<br>hexo deploy<br>hexo server –debug</p>
+<hr>
+<h2 id="RESP-Bulk-Strings"><a href="#RESP-Bulk-Strings" class="headerlink" title="RESP Bulk Strings"></a>RESP Bulk Strings</h2><blockquote>
+<p>字符串块 或者 批量字符串<br>我习惯上成为 批量字符串，此处显然 翻译成 <strong>字符串块</strong> 更合适</p>
 </blockquote>
-<p>然后在浏览器中输入<a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a> 就可以看到效果。</p>
-<h4 id="Hexo命令常用命令："><a href="#Hexo命令常用命令：" class="headerlink" title="Hexo命令常用命令："></a>Hexo命令常用命令：</h4><blockquote>
-<p>npm install hexo-deployer-git —save  # git发布插件<br>hexo server –debug<br>hexo new “postName” #新建文章<br>hexo new page “pageName” #新建页面<br>hexo generate #生成静态页面至public目录<br>hexo deploy #将.deploy目录部署到GitHub<br>hexo server #开启预览访问端口（默认端口4000，’ctrl + c’关闭server）</p>
-</blockquote>
-<h3 id="Hexo-配置和第三方插件"><a href="#Hexo-配置和第三方插件" class="headerlink" title="Hexo 配置和第三方插件"></a>Hexo 配置和第三方插件</h3><p><a href="https://help.github.com/articles/creating-a-custom-404-page-for-your-github-pages-site/" target="_blank" rel="external">404公益页面</a><br><a href="http://theme-next.iissnan.com/third-party-services.html" target="_blank" rel="external">第三方服务集成</a><br><a href="http://theme-next.iissnan.com/theme-settings.html" target="_blank" rel="external">Hexo主题配置</a></p>
-<p>遇到的问题：<br>1、Permission denied (publicly).<br>   解决方案：ssh-add ~/.ssh/id_rsa_work<br>2、发布失败<br>   解决方法：npm install hexo-deployer-git —save </p>
-<p>参考：<br><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">Hexo 文档</a> 搭建过程基本安装官网步骤<br><a href="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="external">Hexo高效的静态站点生成框架的使用</a>  基本过程都是按照这个做的！<br><a href="http://www.jianshu.com/p/05289a4bc8b2" target="_blank" rel="external">如何搭建一个独立博客——简明Github Pages与Hexo教程</a>这篇文章帮助很大</p>
-<p><a href="http://www.cnblogs.com/BeginMan/p/3548139.html" target="_blank" rel="external">多账号配置</a><br><a href="http://www.tuicool.com/articles/ZJrmIvr" target="_blank" rel="external">Hexo搭建博客1</a><br><a href="http://www.tuicool.com/articles/uE7FJba/" target="_blank" rel="external">Hexo搭建博客2</a><br><a href="http://www.tuicool.com/articles/iI77na" target="_blank" rel="external">Hexo搭建博客3</a></p>
+<p>字符串块被用来表示一个二进制安全的最大长度为 512MB 的字符串。</p>
+<hr>
+<p><a href="https://github.com/MSOpenTech/redis/releases" target="_blank" rel="external">Redis Windows版本下载</a></p>
+<p><strong>马克飞象</strong>是一款专为印象笔记（Evernote）打造的Markdown编辑器，通过精心的设计与技术实现，配合印象笔记强大的存储和同步功能，带来前所未有的书写体验。特点概述：</p>
+<ul>
+<li><strong>功能丰富</strong> ：支持高亮代码块、<em>LaTeX</em> 公式、流程图，本地图片以及附件上传，甚至截图粘贴，工作学习好帮手；</li>
+<li><strong>得心应手</strong> ：简洁高效的编辑器，提供[桌面客户端][1]以及[离线Chrome App][2]，支持移动端 Web；</li>
+<li><strong>深度整合</strong> ：支持选择笔记本和添加标签，支持从印象笔记跳转编辑，轻松管理。</li>
+</ul>
+<hr>
+<h3 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@requires_authorization</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">somefunc</span><span class="params">(param1=<span class="string">''</span>, param2=<span class="number">0</span>)</span>:</span></div><div class="line">    <span class="string">'''A docstring'''</span></div><div class="line">    <span class="keyword">if</span> param1 &gt; param2: <span class="comment"># interesting</span></div><div class="line">        <span class="keyword">print</span> <span class="string">'Greater'</span></div><div class="line">    <span class="keyword">return</span> (param2 - param1 + <span class="number">1</span>) <span class="keyword">or</span> <span class="keyword">None</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomeClass</span>:</span></div><div class="line">    <span class="keyword">pass</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>message = <span class="string">'''interpreter</span></div><div class="line"><span class="meta">... </span>prompt'''</div></pre></td></tr></table></figure>
+<h3 id="LaTeX-公式"><a href="#LaTeX-公式" class="headerlink" title="LaTeX 公式"></a>LaTeX 公式</h3><p>可以创建行内公式，例如 $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$。或者块级公式：</p>
+<p>$$    x = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$</p>
+<h3 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h3><table>
+<thead>
+<tr>
+<th style="text-align:left">Item</th>
+<th style="text-align:right">Value</th>
+<th style="text-align:center">Qty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Computer</td>
+<td style="text-align:right">1600 USD</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td style="text-align:left">Phone</td>
+<td style="text-align:right">12 USD</td>
+<td style="text-align:center">12</td>
+</tr>
+<tr>
+<td style="text-align:left">Pipe</td>
+<td style="text-align:right">1 USD</td>
+<td style="text-align:center">234</td>
+</tr>
+</tbody>
+</table>
 
       
     </div>
@@ -437,17 +468,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/10/mysql忘记密码/" rel="next" title="mysql忘记密码">
-                <i class="fa fa-chevron-left"></i> mysql忘记密码
+              <a href="/2016/07/11/GitHub-Pages-博客搭建/" rel="next" title="GitHub Pages 博客搭建">
+                <i class="fa fa-chevron-left"></i> GitHub Pages 博客搭建
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/17/Redis-Protocol-specification（Redis协议规范）/" rel="prev" title="Redis Protocol specification（Redis协议规范）">
-                Redis Protocol specification（Redis协议规范） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -479,8 +506,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/07/11/GitHub-Pages-博客搭建/"
-           data-title="GitHub Pages 博客搭建" data-url="http://yoursite.com/2016/07/11/GitHub-Pages-博客搭建/">
+      <div class="ds-thread" data-thread-key="2016/07/17/Redis-Protocol-specification（Redis协议规范）/"
+           data-title="Redis Protocol specification（Redis协议规范）" data-url="http://yoursite.com/2016/07/17/Redis-Protocol-specification（Redis协议规范）/">
       </div>
     
   </div>
@@ -621,7 +648,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GitHub-Page-建立博客"><span class="nav-number">1.</span> <span class="nav-text">GitHub Page 建立博客</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建博客初衷"><span class="nav-number">2.</span> <span class="nav-text">搭建博客初衷</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GitHub-Pages"><span class="nav-number">3.</span> <span class="nav-text">GitHub Pages</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Github-Pages-是什么"><span class="nav-number">3.1.</span> <span class="nav-text">Github Pages 是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Github-Pages有以下几个优点："><span class="nav-number">3.2.</span> <span class="nav-text">Github Pages有以下几个优点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Github-Pages有以下几个缺点："><span class="nav-number">3.3.</span> <span class="nav-text">Github Pages有以下几个缺点：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建"><span class="nav-number">4.</span> <span class="nav-text">搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置和使用Github"><span class="nav-number">4.1.</span> <span class="nav-text">配置和使用Github</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#配置SSH-KEYS"><span class="nav-number">4.1.1.</span> <span class="nav-text">配置SSH KEYS</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加SSH-Key到GitHub"><span class="nav-number">4.2.</span> <span class="nav-text">添加SSH Key到GitHub</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Node"><span class="nav-number">4.3.</span> <span class="nav-text">安装Node</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Hexo"><span class="nav-number">4.4.</span> <span class="nav-text">安装Hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发布到-Github-个人站点"><span class="nav-number">4.5.</span> <span class="nav-text">发布到 Github 个人站点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Hexo命令常用命令："><span class="nav-number">4.5.1.</span> <span class="nav-text">Hexo命令常用命令：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hexo-配置和第三方插件"><span class="nav-number">4.6.</span> <span class="nav-text">Hexo 配置和第三方插件</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis-协议-amp-amp-–pipe"><span class="nav-number">1.</span> <span class="nav-text">Redis 协议 &&  –pipe</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis协议规范"><span class="nav-number">1.1.</span> <span class="nav-text">Redis协议规范</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络层"><span class="nav-number">1.2.</span> <span class="nav-text">网络层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求响应模型"><span class="nav-number">1.3.</span> <span class="nav-text">请求响应模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#协议描述"><span class="nav-number">1.4.</span> <span class="nav-text">协议描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Simple-Strings"><span class="nav-number">1.5.</span> <span class="nav-text">RESP Simple Strings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Errors"><span class="nav-number">1.6.</span> <span class="nav-text">RESP Errors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Integers"><span class="nav-number">1.7.</span> <span class="nav-text">RESP Integers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Bulk-Strings"><span class="nav-number">1.8.</span> <span class="nav-text">RESP Bulk Strings</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码块"><span class="nav-number">1.8.1.</span> <span class="nav-text">代码块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LaTeX-公式"><span class="nav-number">1.8.2.</span> <span class="nav-text">LaTeX 公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#表格"><span class="nav-number">1.8.3.</span> <span class="nav-text">表格</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
         </section>
