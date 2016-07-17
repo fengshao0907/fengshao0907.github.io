@@ -92,7 +92,7 @@ Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)�
 <meta property="og:site_name" content="Mr岳的技术博客">
 <meta property="og:description" content="Redis 协议
 Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
-<meta property="og:updated_time" content="2016-07-17T15:16:09.000Z">
+<meta property="og:updated_time" content="2016-07-17T15:56:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis Protocol specification（Redis协议规范）">
 <meta name="twitter:description" content="Redis 协议
@@ -405,6 +405,24 @@ Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)�
 <p>字符串块 或者 批量字符串<br>我习惯上成为 批量字符串，此处显然 翻译成 <strong>字符串块</strong> 更合适</p>
 </blockquote>
 <p>字符串块被用来表示一个二进制安全的最大长度为 512MB 的字符串。</p>
+<ul>
+<li>“$”字节依次组成的字符串的字节数(前缀长度)，以 CRLF终止。</li>
+<li>真实的字符串数据</li>
+<li>最后一个是回车换行符(CRLF  :  \r\n)</li>
+</ul>
+<p>所以字符串”foobar”的编码格式如下：</p>
+<blockquote>
+<p>“$6\r\nfoobar\r\n”</p>
+</blockquote>
+<p>空字符串</p>
+<blockquote>
+<p>“$0\r\n\r\n”</p>
+</blockquote>
+<p>RESP 字符串块也可以用于不存在的值，需要使用特殊的格式来表示一个 NULL值。在这个特殊的格式中，长度为 -1，并且没有数据，所以NULL 表示为：</p>
+<blockquote>
+<p>“$-1\r\n”</p>
+</blockquote>
+<p>这被称为一个空字符串。<br>当服务器用一个空字符串响应时，客户端API不应该返回一个空字符串，而应该是一个nil对象。例如，Ruby API应该返回’nil’，而C API应该返回NULL(或者设置一个特殊的标识符)，等等。</p>
 <hr>
 <p><a href="https://github.com/MSOpenTech/redis/releases" target="_blank" rel="external">Redis Windows版本下载</a></p>
 <p><strong>马克飞象</strong>是一款专为印象笔记（Evernote）打造的Markdown编辑器，通过精心的设计与技术实现，配合印象笔记强大的存储和同步功能，带来前所未有的书写体验。特点概述：</p>
