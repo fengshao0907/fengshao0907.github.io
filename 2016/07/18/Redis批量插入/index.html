@@ -1,0 +1,942 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Redis Mass Import," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="有时候需要在短时间内加载大量的之前存在或者用户产生的数据，Redis能尽可能快的创建数以百万计的的key。这就是所谓的批量插入，本文档旨在提供有关如何给Redis尽可能快的填充数据。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis批量插入">
+<meta property="og:url" content="http://yoursite.com/2016/07/18/Redis批量插入/index.html">
+<meta property="og:site_name" content="Mr岳的技术博客">
+<meta property="og:description" content="有时候需要在短时间内加载大量的之前存在或者用户产生的数据，Redis能尽可能快的创建数以百万计的的key。这就是所谓的批量插入，本文档旨在提供有关如何给Redis尽可能快的填充数据。">
+<meta property="og:updated_time" content="2016-07-18T08:57:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis批量插入">
+<meta name="twitter:description" content="有时候需要在短时间内加载大量的之前存在或者用户产生的数据，Redis能尽可能快的创建数以百万计的的key。这就是所谓的批量插入，本文档旨在提供有关如何给Redis尽可能快的填充数据。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/18/Redis批量插入/"/>
+
+  <title> Redis批量插入 | Mr岳的技术博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?14dfdac6b6d6b979cf81aeb8139f10c2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Mr岳的技术博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Redis批量插入
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-18T16:57:21+08:00" content="2016-07-18">
+              2016-07-18
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/18/Redis批量插入/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/18/Redis批量插入/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/07/18/Redis批量插入/" class="leancloud_visitors" data-flag-title="Redis批量插入">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>有时候需要在短时间内加载大量的之前存在或者用户产生的数据，<code>Redis</code>能尽可能快的创建数以百万计的的<code>key</code>。这就是所谓的批量插入，本文档旨在提供有关如何给<code>Redis</code>尽可能快的填充数据。<br><a id="more"></a></p>
+<h1 id="Redis-批量插入"><a href="#Redis-批量插入" class="headerlink" title="Redis 批量插入"></a>Redis 批量插入</h1><hr>
+<h2 id="使用协议，Luke"><a href="#使用协议，Luke" class="headerlink" title="使用协议，Luke"></a>使用协议，Luke</h2><p>使用正常的<code>Redis</code>客户端执行批量插入不是一个很好的主意，有几个原因：发送一个命令之后，另外一个是非常缓慢的，因为你必须为每一个命令付出往返时间。你也可以使用管道，但是对于大量的插入，你需要在写新命令的同时读取响应以确保<code>Redis</code>能尽可能快的完成插入。</p>
+<p>只有一小部分客户端支持非阻塞IO，而且并不是所有的客户端能够以有效地方式来解析响应，以最大限度的提高吞吐量。</p>
+<p>这些原因致使批量导入数据到<code>Redis</code>的首选方式是 生成包含<code>Redis</code> 协议的文本文件、以<code>RAW</code>格式来调用命令完成插入所需的数据。</p>
+<p>例如，如果我需要产生一个大的数据集，这些数据有数十亿的键值对(<code>KeyN---&gt;ValueN</code>)，接下来我将创建一个文件，文件中包含如下以<code>Redis</code>协议格式的命令：</p>
+<blockquote>
+<p>SET Key0 Value0<br>SET Key1 Value1<br>…<br>SET KeyN ValueN</p>
+</blockquote>
+<p>一旦创建此文件，剩下的动作就是尽可能快的去填充数据。过去这样做是使用如下<code>netcat</code>命令：</p>
+<blockquote>
+<p>(cat data.txt; sleep 10) | nc localhost 6379 &gt; /dev/null </p>
+</blockquote>
+<p>然而对于执行批量插入来说这并不是一个可靠的方式，因为<code>netcat</code>并不知道数据什么时候传输完成而且也不做错误检查。在<code>Redis 2.6</code>和之后的高级版本中，<code>redis-cli</code>支持一种新的模式，该模式被称为管道模式，它就是为了批量插入而设计的。<br>使用管道模式运行命令如下：</p>
+<blockquote>
+<p>cat data.txt | redis-cli –pipe</p>
+</blockquote>
+<p>它将会产生如下输出：</p>
+<blockquote>
+<p>All data transferred. Waiting for the last reply…<br>Last reply received from server.<br>errors: 0, replies: 1000000</p>
+</blockquote>
+<p><code>redis-cli</code>工具也将确保只将<code>Redis</code>实例的错误重定向到标注输出。</p>
+<hr>
+<h2 id="生成Redis协议"><a href="#生成Redis协议" class="headerlink" title="生成Redis协议"></a>生成<code>Redis</code>协议</h2><p>生成和解析<code>Redis</code>协议非常的简单。<br>为了生成批量插入数据的协议，不需要了解协议的每一个细节，但是每一个命令必须都以下面的方式表示：</p>
+<blockquote>
+<p><code>*&lt;args&gt;&lt;cr&gt;&lt;lf&gt;</code><br><code>$&lt;len&gt;&lt;cr&gt;&lt;lf&gt;</code><br><code>&lt;arg0&gt;&lt;cr&gt;&lt;lf&gt;</code><br><code>&lt;arg1&gt;&lt;cr&gt;&lt;lf&gt;</code><br>…<br><code>&lt;argN&gt;&lt;cr&gt;&lt;lf&gt;</code></p>
+</blockquote>
+<p>其中<code>&lt;cr&gt;</code>表示<code>\r</code>(或<code>ASCII</code>字符13)，<code>&lt;lf&gt;</code> 表示 <code>\n</code> (或<code>ASCII</code>字符10)。例如 <code>SET key value</code>命令如下：</p>
+<blockquote>
+<p><code>*3&lt;cr&gt;&lt;lf&gt;</code><br><code>$3&lt;cr&gt;&lt;lf&gt;</code><br><code>SET&lt;cr&gt;&lt;lf&gt;</code><br><code>$3&lt;cr&gt;&lt;lf&gt;</code><br><code>key&lt;cr&gt;&lt;lf&gt;</code><br><code>$5&lt;cr&gt;&lt;lf&gt;</code><br><code>value&lt;cr&gt;&lt;lf&gt;</code></p>
+</blockquote>
+<p>或者表示为如下字符串：</p>
+<blockquote>
+<p><code>&quot;*3\r\n$3\r\nSET\r\n$3\r\nkey\r\n$5\r\nvalue\r\n&quot;</code></p>
+</blockquote>
+<p>你只需要生成由如上方式表示的命令组成的文件。下面是使用<code>Ruby</code>函数生成的协议</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> <span class="function"><span class="keyword">def</span> <span class="title">gen_redis_proto</span><span class="params">(*cmd)</span></span></div><div class="line">    proto = <span class="string">""</span></div><div class="line">    proto &lt;&lt; <span class="string">"*"</span>+cmd.length.to_s+<span class="string">"\r\n"</span></div><div class="line">    cmd.each&#123;<span class="params">|arg|</span></div><div class="line">        proto &lt;&lt; <span class="string">"$"</span>+arg.to_s.bytesize.to_s+<span class="string">"\r\n"</span></div><div class="line">        proto &lt;&lt; arg.to_s+<span class="string">"\r\n"</span></div><div class="line">    &#125;</div><div class="line">    proto</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">puts gen_redis_proto(<span class="string">"SET"</span>,<span class="string">"mykey"</span>,<span class="string">"Hello World!"</span>).inspect</div></pre></td></tr></table></figure>
+<p>使用上面的函数可以很容易的生成上面示例中键值对,程序如下：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(<span class="number">0</span>...<span class="number">1000</span>).each&#123;<span class="params">|n|</span></div><div class="line">    STDOUT.write(gen_redis_proto(<span class="string">"SET"</span>,<span class="string">"Key<span class="subst">#&#123;n&#125;</span>"</span>,<span class="string">"Value<span class="subst">#&#123;n&#125;</span>"</span>))</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们可以通过管道去运行<code>redis-cli</code>来完成批量插入：</p>
+<blockquote>
+<p>$ ruby proto.rb | redis-cli –pipe<br>All data transferred. Waiting for the last reply…<br>Last reply received from server.<br>errors: 0, replies: 1000</p>
+</blockquote>
+<hr>
+<h2 id="在Hoods下管道模式是如何工作的"><a href="#在Hoods下管道模式是如何工作的" class="headerlink" title="在Hoods下管道模式是如何工作的"></a>在Hoods下管道模式是如何工作的</h2><p>魔术发生在    <code>redis-cli</code>的管道模式内部，和<code>netcat</code>一样快，而且同时能够知道服务器发送的最后响应是什么时候。</p>
+<p>通过以下方式可以得知：</p>
+<ul>
+<li><code>redis-cli --pipe</code>尝试尽可能快的发送数据到服务器。</li>
+<li>同时，当数据到达时尝试去解析它。</li>
+<li>一旦发现没有数据输入，就会发送一个随机的20个字节组成的特殊的<code>ECHO</code>命令：我们能够确保这是发送的最后的命令，并且如果我们收到同样的20字节的响应，我们就可以对响应进行匹配检查。</li>
+<li>一旦这个特殊的最终命令被发送，接收响应的代码就开始和这20字节的响应进行匹配。当匹配响应到达时，就可以成功推出了。</li>
+</ul>
+<p>使用这个技巧，我们不需要解析我们发送到服务器的协议来了解我们发送的命令，除了响应。</p>
+<p>然而，在解析响应时我们为所有的响应开启计数器，以便在最后，能够被告知批量插入到服务器的命令的数量。</p>
+<hr>
+<h1 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h1><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>使用<code>redis</code>来存储用户投递过的职位Id列表，类似于我的关注，粉丝列表。</p>
+<p>方案 ：</p>
+<blockquote>
+<p>使用Sorted Set来存储，生成协议文件，然后使用 –pipe导入</p>
+</blockquote>
+<p>格式 ：</p>
+<blockquote>
+<p>userId:1231312  deliverTime(投递时间)  positionId(职位Id)</p>
+</blockquote>
+<p>查看用户投递的所有职位    </p>
+<blockquote>
+<p>zrange userId:645009 0 -1 withscores</p>
+</blockquote>
+<p>查看用户投递数</p>
+<blockquote>
+<p>zcard      userId:xxx</p>
+</blockquote>
+<p>查看用户某一时间段的投递数</p>
+<blockquote>
+<p>zcount userId:xxx    minScore    maxScore</p>
+</blockquote>
+<p>查看用户是否投递过</p>
+<blockquote>
+<p> zrank    userId:xxx    positionId  获取用户排名（从0开始）<br> zscore    userId:xxx    positionId   获取score</p>
+</blockquote>
+<p>移除单个  </p>
+<blockquote>
+<p>zrem userId:xxx    positionId</p>
+</blockquote>
+<p>移除多个</p>
+<blockquote>
+<p> zrem userId:xxx    positionId positionId positionId</p>
+</blockquote>
+<p>移除不存在元素  </p>
+<blockquote>
+<p> zrem userId:xxx non-exists-element</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">其中文件内容生成方式示例（zadd）如下：</div><div class="line"><span class="comment">/**</span></div><div class="line">    * 生成redis proto协议命令</div><div class="line">    * <span class="doctag">@param</span> key</div><div class="line">    * <span class="doctag">@param</span> score</div><div class="line">    * <span class="doctag">@param</span> member</div><div class="line">    * <span class="doctag">@return</span></div><div class="line">    */</div><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">createRedisProtocolCommonds</span><span class="params">(String key,Long score,Integer member)</span></span>&#123;</div><div class="line">  StringBuffer a = <span class="keyword">new</span> StringBuffer();</div><div class="line"></div><div class="line">  <span class="comment">// zadd</span></div><div class="line">  a.append(<span class="string">"*4\r\n"</span>);</div><div class="line">  a.append(<span class="string">"$4\r\n"</span>);</div><div class="line">  a.append(<span class="string">"ZADD"</span>);</div><div class="line">  a.append(<span class="string">"\r\n"</span>);</div><div class="line">  </div><div class="line">  <span class="comment">// zadd userId:userId key</span></div><div class="line">  a.append(<span class="string">"$"</span>);</div><div class="line">  a.append(key.length());</div><div class="line">  a.append(<span class="string">"\r\n"</span>);</div><div class="line">  a.append(key);</div><div class="line">  a.append(<span class="string">"\r\n"</span>);</div><div class="line">  </div><div class="line">  <span class="comment">// zadd userId:userId key score</span></div><div class="line">  a.append(<span class="string">"$"</span>);</div><div class="line">  a.append(String.valueOf(score).length());</div><div class="line">  a.append(<span class="string">"\r\n"</span>);</div><div class="line">  a.append(score);</div><div class="line">  a.append(<span class="string">"\r\n"</span>);</div><div class="line">  </div><div class="line">  <span class="comment">// zadd userId:userId key score value</span></div><div class="line">  a.append(<span class="string">"$"</span>);</div><div class="line">  a.append(String.valueOf(member).length());</div><div class="line">  a.append(<span class="string">"\r\n"</span>);</div><div class="line">  a.append(member);</div><div class="line">  a.append(<span class="string">"\r\n"</span>);</div><div class="line">  <span class="keyword">return</span> a.toString();</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>以下是我用sql直接生成的(只是示例代码，跟上面的需求无关)<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">CONCAT</span>(</div><div class="line">  <span class="string">"*4\r\n"</span>,</div><div class="line">  <span class="string">'$'</span>, <span class="keyword">LENGTH</span>(redis_cmd), <span class="string">'\r\n'</span>,</div><div class="line">  redis_cmd, <span class="string">'\r\n'</span>,</div><div class="line">  <span class="string">'$'</span>, <span class="keyword">LENGTH</span>(redis_key), <span class="string">'\r\n'</span>,</div><div class="line">  redis_key, <span class="string">'\r\n'</span>,</div><div class="line">  <span class="string">'$'</span>, <span class="keyword">LENGTH</span>(hkey), <span class="string">'\r\n'</span>,</div><div class="line">  hkey, <span class="string">'\r\n'</span>,</div><div class="line">  <span class="string">'$'</span>, <span class="keyword">LENGTH</span>(hval), <span class="string">'\r\n'</span>,</div><div class="line">  hval, <span class="string">'\r'</span></div><div class="line">)</div><div class="line"><span class="keyword">FROM</span> (</div><div class="line">  <span class="keyword">SELECT</span></div><div class="line">  <span class="string">'ZADD'</span> <span class="keyword">AS</span> redis_cmd,</div><div class="line">  <span class="string">'createTime'</span> <span class="keyword">AS</span> redis_key,</div><div class="line">  userId <span class="keyword">AS</span> hkey,</div><div class="line">  city <span class="keyword">AS</span> hval</div><div class="line">  <span class="keyword">FROM</span> user_ip_location</div><div class="line">) <span class="keyword">AS</span> t</div></pre></td></tr></table></figure></p>
+</blockquote>
+<p>导入数据命令 ：</p>
+<blockquote>
+<p> cat xxx.log | redis-cli –pipe</p>
+</blockquote>
+<p>耗时：千万数据，20S左右，Windows机器。</p>
+<p>译自：<a href="http://redis.io/topics/mass-insert" target="_blank" rel="external">Redis Mass Insertion</a>   欢迎指正。</p>
+<hr>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Redis-Mass-Import/" rel="tag">#Redis Mass Import</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/17/Redis-Protocol-specification（Redis协议规范）/" rel="next" title="Redis Protocol specification（Redis协议规范）">
+                <i class="fa fa-chevron-left"></i> Redis Protocol specification（Redis协议规范）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/18/Redis批量插入/"
+           data-title="Redis批量插入" data-url="http://yoursite.com/2016/07/18/Redis批量插入/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/头像.jpg"
+               alt="Mr岳" />
+          <p class="site-author-name" itemprop="name">Mr岳</p>
+          <p class="site-description motion-element" itemprop="description">There are no two identical leaves in the world.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/fengshao0907" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/3085325177/profile" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/xiaoxiaoye" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" title="MacTalk" target="_blank">MacTalk</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="HeDengCheng" target="_blank">HeDengCheng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://mysql.taobao.org/monthly/2016/06/" title="数据库内核月报" target="_blank">数据库内核月报</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://es.xiaoleilu.com/" title="ElasticSearch" target="_blank">ElasticSearch</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis-批量插入"><span class="nav-number">1.</span> <span class="nav-text">Redis 批量插入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用协议，Luke"><span class="nav-number">1.1.</span> <span class="nav-text">使用协议，Luke</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成Redis协议"><span class="nav-number">1.2.</span> <span class="nav-text">生成Redis协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Hoods下管道模式是如何工作的"><span class="nav-number">1.3.</span> <span class="nav-text">在Hoods下管道模式是如何工作的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实战"><span class="nav-number">2.</span> <span class="nav-text">实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#需求"><span class="nav-number">2.1.</span> <span class="nav-text">需求</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2013 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr岳</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"fengshao0907"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("kTtTzkfBK0h3Db6QELtFmMYq-gzGzoHsz", "7iLht0UC6uCiSqVTjzy8QUc4");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
