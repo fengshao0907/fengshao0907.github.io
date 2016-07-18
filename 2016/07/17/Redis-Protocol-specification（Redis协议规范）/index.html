@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/07/17/Redis-Protocol-specification（Redis协议规范）/index.html">
 <meta property="og:site_name" content="Mr岳的技术博客">
 <meta property="og:description" content="Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
-<meta property="og:updated_time" content="2016-07-18T06:12:23.000Z">
+<meta property="og:updated_time" content="2016-07-18T09:50:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis Protocol specification（Redis协议规范）">
 <meta name="twitter:description" content="Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
@@ -354,22 +354,22 @@
 <h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><p><code>Redis Client</code>通过 建立一个<code>TCP</code> 连接到端口6379 来连接<code>Redis Server</code>。</p>
 <p>然而 <code>RESP</code> 在技术上并非特定的<code>TCP</code>，在<code>Redis</code> 协议仅仅被用在与<code>TCP</code>建立连接(或者等效的面向流的连接，如 <code>Unix Sockets</code>)的上下文中。</p>
 <hr>
-<h2 id="请求响应模型"><a href="#请求响应模型" class="headerlink" title="请求响应模型"></a>请求响应模型</h2><p>Redis 接收由不同参数组成的命令。一旦命令被接收到，它就会被服务端处理并且会发送响应给客户端。</p>
+<h2 id="请求响应模型"><a href="#请求响应模型" class="headerlink" title="请求响应模型"></a>请求响应模型</h2><p><code>Redis</code> 接收由不同参数组成的命令。一旦命令被接收到，它就会被服务端处理并且会发送响应给客户端。</p>
 <p>这可能是最简单的模型，然而有另外两种情况：</p>
 <ul>
-<li>Redis 支持管道流。因此 它使客户端一次发送多个命令成为可能，之后等待答复/响应。</li>
-<li>当一个 Redis 客户端订阅一个Pub/Sub channel 时，协议就会转换语义变成一种push协议，此时客户端不再需要发送命令，因为服务器会自动给客户端发送消息，这些消息会被尽可能快的收到。</li>
+<li><code>Redis</code> 支持管道流。因此 它使客户端一次发送多个命令成为可能，之后等待答复/响应。</li>
+<li>当一个 <code>Redis</code> 客户端订阅一个<code>Pub/Sub channel</code> 时，协议就会转换语义变成一种<code>push</code>协议，此时客户端不再需要发送命令，因为服务器会自动给客户端发送消息，这些消息会被尽可能快的收到。</li>
 </ul>
-<p>不包括以上两点，Redis 就是一个简单的 请求-响应 协议。</p>
+<p>不包括以上两点，<code>Redis</code> 就是一个简单的 请求-响应 协议。</p>
 <hr>
-<h2 id="协议描述"><a href="#协议描述" class="headerlink" title="协议描述"></a>协议描述</h2><p>Redis 1.2 时就介绍过 RESP，但是从 Redis 2.0 开始，他成为一种与 Redis Server 通信的标准协议。这个协议就是在 Redis 客户端要实现的协议。</p>
-<p>RESP 实际上是一个支持以下数据类型序列化的协议：简单字符串、整型、字符串、数组、错误。</p>
-<p>RESP 作为一种请求-响应协议以以下方式被用在 Redis 中：</p>
+<h2 id="协议描述"><a href="#协议描述" class="headerlink" title="协议描述"></a>协议描述</h2><p><code>Redis 1.2</code> 时就介绍过 <code>RESP</code>，但是从 <code>Redis 2.0</code> 开始，他成为一种与 <code>Redis Server</code> 通信的标准协议。这个协议就是在 <code>Redis</code> 客户端要实现的协议。</p>
+<p><code>RESP</code> 实际上是一个支持以下数据类型序列化的协议：简单字符串、整型、字符串、数组、错误。</p>
+<p><code>RESP</code> 作为一种请求-响应协议以以下方式被用在 <code>Redis</code> 中：</p>
 <ul>
-<li>RESP 作为一个大字符串数组 被Client 发送命令到 Redis Server 端</li>
-<li>Server 端 用根据命令实现的其中的一种 RESP 类型来响应Client 请求。</li>
+<li><code>RESP</code> 作为一个大字符串数组 被<code>Client</code> 发送命令到 <code>Redis Server</code> 端</li>
+<li><code>Server</code> 端 用根据命令实现的其中的一种 RESP 类型来响应<code>Client</code> 请求。</li>
 </ul>
-<p>在 RESP 协议中，数据类型取决于第一个字节：</p>
+<p>在 <code>RESP</code> 协议中，数据类型取决于第一个字节：</p>
 <ul>
 <li>对于简单字符串，响应的第一个字节是 “<code>+</code>“</li>
 <li>对于错误，响应的第一个字节是 “<code>-</code>“</li>
@@ -377,17 +377,17 @@
 <li>对于批量字符串，响应的第一个字节是 “<code>$</code>“</li>
 <li>对于数组，响应的第一个字节是 “<code>*</code>“</li>
 </ul>
-<p>此外，RESP 可以使用一个特定的批量字符串或数组的特殊变化来表示一个空值。<br>RESP 协议的不同部分都终止了与<code>&quot;\r\n&quot;</code>CRLF）。</p>
+<p>此外，<code>RESP</code> 可以使用一个特定的批量字符串或数组的特殊变化来表示一个空值。<br><code>RESP</code> 协议的不同部分都终止了与<code>&quot;\r\n&quot;</code>CRLF）。</p>
 <hr>
-<h2 id="RESP-Simple-Strings"><a href="#RESP-Simple-Strings" class="headerlink" title="RESP Simple Strings"></a>RESP Simple Strings</h2><p>简单字符串的编码方式如下：<code>+</code>字符之后紧跟着一个不包含<code>CR</code>或<code>LF</code>字符的字符串(不允许换行)，终止符是 <code>CRLF(&quot;\r\n&quot;)</code>.</p>
-<p>简单字符串是用来传输非二进制安全字符串的最小开销。例如 Redis 恢复<code>OK</code>时，只需要用以下5个字节进行编码 <code>&quot;+OK\r\n&quot;</code>。</p>
-<p>为了发送二进制安全的字符串，使用 RESP 批量字符串来代替。当 Redis 回复/响应 一个简单字符串时，客户端应该返回到调用一个由第一个字符后的<code>&quot;+&quot;</code>为结尾的字符串的字符串，不包含终止 <code>CRLF</code>字节。</p>
-<h2 id="RESP-Errors"><a href="#RESP-Errors" class="headerlink" title="RESP Errors"></a>RESP Errors</h2><p>RESP Errors 是一个特殊的数据类型。其实错误类型 跟 RESP 简单字符串很像，只不过它的第一个字符是一个减号<code>&quot;-&quot;</code> ，而不是 “+”。简单字符串 和 Errors 在 RESP 中真正的区别是 Errors 在客户端被作为异常处理，并且构成 Errors 类型的字符串就是错误信息本身。<br>基本格式如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"-Error Message\r\n"</span></div></pre></td></tr></table></figure></p>
+<h2 id="RESP-Simple-Strings"><a href="#RESP-Simple-Strings" class="headerlink" title="RESP Simple Strings"></a><code>RESP Simple Strings</code></h2><p>简单字符串的编码方式如下：<code>+</code>字符之后紧跟着一个不包含<code>CR</code>或<code>LF</code>字符的字符串(不允许换行)，终止符是 <code>CRLF(&quot;\r\n&quot;)</code>.</p>
+<p>简单字符串是用来传输非二进制安全字符串的最小开销。例如 <code>Redis</code> 恢复<code>OK</code>时，只需要用以下5个字节进行编码 <code>&quot;+OK\r\n&quot;</code>。</p>
+<p>为了发送二进制安全的字符串，使用 <code>RESP</code> 批量字符串来代替。当 <code>Redis</code> 回复/响应 一个简单字符串时，客户端应该返回到调用一个由第一个字符后的<code>&quot;+&quot;</code>为结尾的字符串的字符串，不包含终止 <code>CRLF</code>字节。</p>
+<h2 id="RESP-Errors"><a href="#RESP-Errors" class="headerlink" title="RESP Errors"></a>RESP Errors</h2><p><code>RESP Errors</code> 是一个特殊的数据类型。其实错误类型 跟 <code>RESP</code> 简单字符串很像，只不过它的第一个字符是一个减号<code>&quot;-&quot;</code> ，而不是 “+”。简单字符串 和 <code>Errors</code> 在 <code>RESP</code> 中真正的区别是 <code>Errors</code> 在客户端被作为异常处理，并且构成 <code>Errors</code> 类型的字符串就是错误信息本身。<br>基本格式如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"-Error Message\r\n"</span></div></pre></td></tr></table></figure></p>
 <p>错误响应只会在发生错误时发送，例如如果你试图执行一个对错误数据类型的操作，或者执行一个不存在的命令，等等。当收到错误响应时，应该由客户端引发一个异常。<br>以下就是错误响应的示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-ERR unknown command <span class="string">'foobar'</span></div><div class="line">-WRONGTYPE Operation against a key holding the wrong kind of value</div></pre></td></tr></table></figure></p>
 <blockquote>
-<p>第一个词后的<code>&quot;-&quot;</code>，到第一个空格或换行，代表返回的错误类型。这个仅仅是 Redis 的一个约定并不是 RESP Errors 错误格式的一部分。</p>
+<p>第一个词后的<code>&quot;-&quot;</code>，到第一个空格或换行，代表返回的错误类型。这个仅仅是 <code>Redis</code> 的一个约定并不是 <code>RESP Errors</code> 错误格式的一部分。</p>
 </blockquote>
-<p>例如，ERR是一般错误，而WRONGTYPE是一个更加具体的错苏，意味着客户端试图执行一个针对错误数据类型的操作。这被称为一个错误前缀，是一种允许客户端理解服务端返回的错误类型的方式，它不依赖于给定的确切消息。<br>客户端实现可能会为不同的错误返回不同的异常类型，或者可能提供一个通用的方法来捕获异常，该方法直接把错误的名称作为字符串提供类调用方。<br>然而，这样的功能不应该被认为是最关重要的，因为它很少被用到，而且客户端实现可能只是返回一个通用的错误条件，例如 false。</p>
+<p>例如，<code>ERR</code>是一般错误，而<code>WRONGTYPE</code>是一个更加具体的错苏，意味着客户端试图执行一个针对错误数据类型的操作。这被称为一个错误前缀，是一种允许客户端理解服务端返回的错误类型的方式，它不依赖于给定的确切消息。<br>客户端实现可能会为不同的错误返回不同的异常类型，或者可能提供一个通用的方法来捕获异常，该方法直接把错误的名称作为字符串提供类调用方。<br>然而，这样的功能不应该被认为是最关重要的，因为它很少被用到，而且客户端实现可能只是返回一个通用的错误条件，例如 false。</p>
 <hr>
 <h2 id="RESP-Integers"><a href="#RESP-Integers" class="headerlink" title="RESP Integers"></a>RESP Integers</h2><p>这种类型仅仅只用 CRLF 终止符代表一个整数，以”:” 作为前缀。如： </p>
 <blockquote>
