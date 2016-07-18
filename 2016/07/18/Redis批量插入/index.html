@@ -90,7 +90,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/07/18/Redis批量插入/index.html">
 <meta property="og:site_name" content="Mr岳的技术博客">
 <meta property="og:description" content="有时候需要在短时间内加载大量的之前存在或者用户产生的数据，Redis能尽可能快的创建数以百万计的的key。这就是所谓的批量插入，本文档旨在提供有关如何给Redis尽可能快的填充数据。">
-<meta property="og:updated_time" content="2016-07-18T09:04:53.000Z">
+<meta property="og:updated_time" content="2016-07-18T09:39:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis批量插入">
 <meta name="twitter:description" content="有时候需要在短时间内加载大量的之前存在或者用户产生的数据，Redis能尽可能快的创建数以百万计的的key。这就是所谓的批量插入，本文档旨在提供有关如何给Redis尽可能快的填充数据。">
@@ -434,7 +434,11 @@
 </blockquote>
 <p>耗时：千万数据，20S左右，Windows机器。</p>
 <p>译自：<a href="http://redis.io/topics/mass-insert" target="_blank" rel="external">Redis Mass Insertion</a>   欢迎指正。</p>
-<h2 id="实战来自之前的工作内容，因为要将历史数据导入到redis，当时想到mysql有个批量导入，redis应该也有吧，于是就调研了一下，是个半年，"><a href="#实战来自之前的工作内容，因为要将历史数据导入到redis，当时想到mysql有个批量导入，redis应该也有吧，于是就调研了一下，是个半年，" class="headerlink" title="实战来自之前的工作内容，因为要将历史数据导入到redis，当时想到mysql有个批量导入，redis应该也有吧，于是就调研了一下，是个半年，"></a>实战来自之前的工作内容，因为要将历史数据导入到redis，当时想到mysql有个批量导入，redis应该也有吧，于是就调研了一下，是个半年，</h2>
+<blockquote>
+<p>实战来自之前的工作内容，因为要将历史数据导入到redis，当时想到mysql有个批量导入，redis应该也有吧，于是就调研了一下。<br>过去大半年了，今天才落实到文档。</p>
+</blockquote>
+<hr>
+
       
     </div>
 
@@ -652,7 +656,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis-批量插入"><span class="nav-number">1.</span> <span class="nav-text">Redis 批量插入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用协议，Luke"><span class="nav-number">1.1.</span> <span class="nav-text">使用协议，Luke</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成Redis协议"><span class="nav-number">1.2.</span> <span class="nav-text">生成Redis协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Hoods下管道模式是如何工作的"><span class="nav-number">1.3.</span> <span class="nav-text">在Hoods下管道模式是如何工作的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实战"><span class="nav-number">2.</span> <span class="nav-text">实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#需求"><span class="nav-number">2.1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实战来自之前的工作内容，因为要将历史数据导入到redis，当时想到mysql有个批量导入，redis应该也有吧，于是就调研了一下，是个半年，"><span class="nav-number">2.2.</span> <span class="nav-text">实战来自之前的工作内容，因为要将历史数据导入到redis，当时想到mysql有个批量导入，redis应该也有吧，于是就调研了一下，是个半年，</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis-批量插入"><span class="nav-number">1.</span> <span class="nav-text">Redis 批量插入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用协议，Luke"><span class="nav-number">1.1.</span> <span class="nav-text">使用协议，Luke</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成Redis协议"><span class="nav-number">1.2.</span> <span class="nav-text">生成Redis协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在Hoods下管道模式是如何工作的"><span class="nav-number">1.3.</span> <span class="nav-text">在Hoods下管道模式是如何工作的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实战"><span class="nav-number">2.</span> <span class="nav-text">实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#需求"><span class="nav-number">2.1.</span> <span class="nav-text">需求</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
