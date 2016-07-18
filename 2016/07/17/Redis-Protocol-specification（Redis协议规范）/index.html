@@ -84,19 +84,16 @@
 
 
 
-<meta name="description" content="Redis 协议
-Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
+<meta name="description" content="P(Redis`序列化协议)。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis Protocol specification（Redis协议规范）">
 <meta property="og:url" content="http://yoursite.com/2016/07/17/Redis-Protocol-specification（Redis协议规范）/index.html">
 <meta property="og:site_name" content="Mr岳的技术博客">
-<meta property="og:description" content="Redis 协议
-Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
-<meta property="og:updated_time" content="2016-07-17T15:56:17.000Z">
+<meta property="og:description" content="P(Redis`序列化协议)。">
+<meta property="og:updated_time" content="2016-07-18T06:08:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis Protocol specification（Redis协议规范）">
-<meta name="twitter:description" content="Redis 协议
-Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
+<meta name="twitter:description" content="P(Redis`序列化协议)。">
 
 
 
@@ -335,27 +332,25 @@ Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)�
       
 
       
-        <h1 id="Redis-协议"><a href="#Redis-协议" class="headerlink" title="Redis 协议"></a>Redis 协议</h1><blockquote>
-<p>Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。</p>
-</blockquote>
+        <p>P<code>(</code>Redis`序列化协议)。</p>
 <a id="more"></a>
 <hr>
-<h2 id="Redis协议规范"><a href="#Redis协议规范" class="headerlink" title="Redis协议规范"></a>Redis协议规范</h2><p>Redis客户端和服务端通信使用的协议成为RESP(Redis序列化协议)。该协议是专门为Redis设计的，当然也可以用于其他 client-server 的软件项目。</p>
-<p>RESP 是一种基于以下几点考虑上的折中协议</p>
+<h1 id="Redis-协议"><a href="#Redis-协议" class="headerlink" title="Redis 协议"></a>Redis 协议</h1><h2 id="Redis协议规范"><a href="#Redis协议规范" class="headerlink" title="Redis协议规范"></a><code>Redis</code>协议规范</h2><p><code>Redis</code>客户端和服务端通信使用的协议成为<code>RESP</code>(<code>Redis</code>序列化协议)。该协议是专门为<code>Redis</code>设计的，当然也可以用于其他 client-server 的软件项目。</p>
+<p><code>RESP</code> 是一种基于以下几点考虑上的折中协议</p>
 <ul>
 <li>简单实现</li>
 <li>快速解析</li>
 <li>人类可读</li>
 </ul>
 <hr>
-<p>RESP 能够将不同的数据类型序列化，比如 整型、字符串、数组，也有一个特定的错误类型。请求从客户端发送到服务器的redis作为代表该命令的参数来执行字符串数组。Redis使用特定数据类型来响应客户端请求。</p>
-<p>RESP 是一种二进制安全的，并且不需要在进程间批量传输的协议，因为它使用前缀长度去批量数据传输。</p>
+<p><code>RESP</code> 能够将不同的数据类型序列化，比如 整型、字符串、数组，也有一个特定的错误类型。请求从客户端发送到服务器的<code>Redis</code>作为代表该命令的参数来执行字符串数组。<code>Redis</code>使用特定数据类型来响应客户端请求。</p>
+<p><code>RESP</code> 是一种二进制安全的，并且不需要在进程间批量传输的协议，因为它使用前缀长度去批量数据传输。</p>
 <blockquote>
-<p>这里概述的协议只用户客户端-服务端通信。Redis Cluster 使用的是一种旨在节点间消息交换的不同的二进制协议。</p>
+<p>这里概述的协议只用户客户端-服务端通信。<code>Redis Cluster</code> 使用的是一种旨在节点间消息交换的不同的二进制协议。</p>
 </blockquote>
 <hr>
-<h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><p>Redis Client通过 建立一个TCP 连接到端口6379 来连接Redis Server。</p>
-<p>然而 RESP 在技术上并非特定的TCP，在Redis 协议仅仅被用在与TCP建立连接(或者等效的面向流的连接，如<br>Unix Sockets)的上下文中。</p>
+<h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><p><code>Redis Client</code>通过 建立一个<code>TCP</code> 连接到端口6379 来连接<code>Redis Server</code>。</p>
+<p>然而 <code>RESP</code> 在技术上并非特定的<code>TCP</code>，在<code>Redis</code> 协议仅仅被用在与<code>TCP</code>建立连接(或者等效的面向流的连接，如 <code>Unix Sockets</code>)的上下文中。</p>
 <hr>
 <h2 id="请求响应模型"><a href="#请求响应模型" class="headerlink" title="请求响应模型"></a>请求响应模型</h2><p>Redis 接收由不同参数组成的命令。一旦命令被接收到，它就会被服务端处理并且会发送响应给客户端。</p>
 <p>这可能是最简单的模型，然而有另外两种情况：</p>
@@ -374,21 +369,21 @@ Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)�
 </ul>
 <p>在 RESP 协议中，数据类型取决于第一个字节：</p>
 <ul>
-<li>对于简单字符串，响应的第一个字节是 “+”</li>
-<li>对于错误，响应的第一个字节是 “-“</li>
-<li>对于整型，响应的第一个字节是 “:”</li>
-<li>对于批量字符串，响应的第一个字节是 “$”</li>
-<li>对于数组，响应的第一个字节是 “*”</li>
+<li>对于简单字符串，响应的第一个字节是 “<code>+</code>“</li>
+<li>对于错误，响应的第一个字节是 “<code>-</code>“</li>
+<li>对于整型，响应的第一个字节是 “<code>:</code>“</li>
+<li>对于批量字符串，响应的第一个字节是 “<code>$</code>“</li>
+<li>对于数组，响应的第一个字节是 “<code>*</code>“</li>
 </ul>
-<p>此外，RESP 可以使用一个特定的批量字符串或数组的特殊变化来表示一个空值。<br>RESP 协议的不同部分都终止了与”\r\n”CRLF）。</p>
+<p>此外，RESP 可以使用一个特定的批量字符串或数组的特殊变化来表示一个空值。<br>RESP 协议的不同部分都终止了与<code>&quot;\r\n&quot;</code>CRLF）。</p>
 <hr>
-<h2 id="RESP-Simple-Strings"><a href="#RESP-Simple-Strings" class="headerlink" title="RESP Simple Strings"></a>RESP Simple Strings</h2><p>简单字符串的编码方式如下：+字符之后紧跟着一个不包含CR或LF字符的字符串(不允许换行)，终止符是 CRLF(“\r\n”).</p>
-<p>简单字符串是用来传输非二进制安全字符串的最小开销。例如 Redis 恢复OK时，只需要用以下5个字节进行编码 “+OK\r\n”。</p>
-<p>为了发送二进制安全的字符串，使用 RESP 批量字符串来代替。当 Redis 回复/响应 一个简单字符串时，客户端应该返回到调用一个由第一个字符后的”+”为结尾的字符串的字符串，不包含终止 CRLF 字节。</p>
-<h2 id="RESP-Errors"><a href="#RESP-Errors" class="headerlink" title="RESP Errors"></a>RESP Errors</h2><p>RESP Errors 是一个特殊的数据类型。其实错误类型 跟 RESP 简单字符串很像，只不过它的第一个字符是一个减号 “-“ ，而不是 “+”。简单字符串 和 Errors 在 RESP 中真正的区别是 Errors 在客户端被作为异常处理，并且构成 Errors 类型的字符串就是错误信息本身。<br>基本格式如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"-Error Message\r\n"</span></div></pre></td></tr></table></figure></p>
+<h2 id="RESP-Simple-Strings"><a href="#RESP-Simple-Strings" class="headerlink" title="RESP Simple Strings"></a>RESP Simple Strings</h2><p>简单字符串的编码方式如下：<code>+</code>字符之后紧跟着一个不包含<code>CR</code>或<code>LF</code>字符的字符串(不允许换行)，终止符是 <code>CRLF(&quot;\r\n&quot;)</code>.</p>
+<p>简单字符串是用来传输非二进制安全字符串的最小开销。例如 Redis 恢复<code>OK</code>时，只需要用以下5个字节进行编码 <code>&quot;+OK\r\n&quot;</code>。</p>
+<p>为了发送二进制安全的字符串，使用 RESP 批量字符串来代替。当 Redis 回复/响应 一个简单字符串时，客户端应该返回到调用一个由第一个字符后的<code>&quot;+&quot;</code>为结尾的字符串的字符串，不包含终止 <code>CRLF</code>字节。</p>
+<h2 id="RESP-Errors"><a href="#RESP-Errors" class="headerlink" title="RESP Errors"></a>RESP Errors</h2><p>RESP Errors 是一个特殊的数据类型。其实错误类型 跟 RESP 简单字符串很像，只不过它的第一个字符是一个减号<code>&quot;-&quot;</code> ，而不是 “+”。简单字符串 和 Errors 在 RESP 中真正的区别是 Errors 在客户端被作为异常处理，并且构成 Errors 类型的字符串就是错误信息本身。<br>基本格式如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"-Error Message\r\n"</span></div></pre></td></tr></table></figure></p>
 <p>错误响应只会在发生错误时发送，例如如果你试图执行一个对错误数据类型的操作，或者执行一个不存在的命令，等等。当收到错误响应时，应该由客户端引发一个异常。<br>以下就是错误响应的示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-ERR unknown command <span class="string">'foobar'</span></div><div class="line">-WRONGTYPE Operation against a key holding the wrong kind of value</div></pre></td></tr></table></figure></p>
 <blockquote>
-<p>第一个词后的”-“，到第一个空格或换行，代表返回的错误类型。这个仅仅是 Redis 的一个约定并不是 RESP Errors 错误格式的一部分。</p>
+<p>第一个词后的<code>&quot;-&quot;</code>，到第一个空格或换行，代表返回的错误类型。这个仅仅是 Redis 的一个约定并不是 RESP Errors 错误格式的一部分。</p>
 </blockquote>
 <p>例如，ERR是一般错误，而WRONGTYPE是一个更加具体的错苏，意味着客户端试图执行一个针对错误数据类型的操作。这被称为一个错误前缀，是一种允许客户端理解服务端返回的错误类型的方式，它不依赖于给定的确切消息。<br>客户端实现可能会为不同的错误返回不同的异常类型，或者可能提供一个通用的方法来捕获异常，该方法直接把错误的名称作为字符串提供类调用方。<br>然而，这样的功能不应该被认为是最关重要的，因为它很少被用到，而且客户端实现可能只是返回一个通用的错误条件，例如 false。</p>
 <hr>
@@ -404,7 +399,7 @@ Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)�
 <h2 id="RESP-Bulk-Strings"><a href="#RESP-Bulk-Strings" class="headerlink" title="RESP Bulk Strings"></a>RESP Bulk Strings</h2><blockquote>
 <p>字符串块 或者 批量字符串<br>我习惯上成为 批量字符串，此处显然 翻译成 <strong>字符串块</strong> 更合适</p>
 </blockquote>
-<p>字符串块被用来表示一个二进制安全的最大长度为 512MB 的字符串。</p>
+<p>字符串块被用来表示一个二进制安全的最大长度为 512MB 的字符串。<br>块字符串以下列方式编码：</p>
 <ul>
 <li>“$”字节依次组成的字符串的字节数(前缀长度)，以 CRLF终止。</li>
 <li>真实的字符串数据</li>
@@ -424,43 +419,79 @@ Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)�
 </blockquote>
 <p>这被称为一个空字符串。<br>当服务器用一个空字符串响应时，客户端API不应该返回一个空字符串，而应该是一个nil对象。例如，Ruby API应该返回’nil’，而C API应该返回NULL(或者设置一个特殊的标识符)，等等。</p>
 <hr>
-<p><a href="https://github.com/MSOpenTech/redis/releases" target="_blank" rel="external">Redis Windows版本下载</a></p>
-<p><strong>马克飞象</strong>是一款专为印象笔记（Evernote）打造的Markdown编辑器，通过精心的设计与技术实现，配合印象笔记强大的存储和同步功能，带来前所未有的书写体验。特点概述：</p>
-<ul>
-<li><strong>功能丰富</strong> ：支持高亮代码块、<em>LaTeX</em> 公式、流程图，本地图片以及附件上传，甚至截图粘贴，工作学习好帮手；</li>
-<li><strong>得心应手</strong> ：简洁高效的编辑器，提供[桌面客户端][1]以及[离线Chrome App][2]，支持移动端 Web；</li>
-<li><strong>深度整合</strong> ：支持选择笔记本和添加标签，支持从印象笔记跳转编辑，轻松管理。</li>
-</ul>
+<h2 id="RESP-Arrays"><a href="#RESP-Arrays" class="headerlink" title="RESP Arrays"></a>RESP Arrays</h2><p>客户端使用RESP Arrays发送命令到Redis Server。同样，某些 Redis 命令 使用 RESP Arrays 作为响应类型 返回给客户端集合元素。像 <strong>LRANGE</strong> 命令 就需要返回含有多个值的list列表。<br>使用以下格式来发送 <strong>RESP Arrays</strong></p>
+<blockquote>
+<p>   一个 * 字符作为第一个字节，随后紧跟数组元素的个数，之后是 CRLF \r\n<br> RESP 数组类型的每个元素</p>
+</blockquote>
+<p>因此，可以使用如下方式表示一个空数组：</p>
+<blockquote>
+<p>“*0\r\n”</p>
+</blockquote>
+<p>包含字符串块 “foo”和”bar”的数组的编码方式如下：</p>
+<blockquote>
+<p>“*2\r\n$3\r\nfoo\r\n$3\r\nbar\r\n”</p>
+</blockquote>
+<p>正如你所看到的，<code>*&lt;count&gt;\r\n</code> 部分是数组的前缀，数组的其他数据类型只是一个串接着一个。如下对三个整数数组的编码如下：</p>
+<blockquote>
+<p>“*3\r\n:1\r\n:2\r\n:3\r\n”</p>
+</blockquote>
+<p>数组也可以包含多种混合类型，数组中的元素不必都是相同的数据类型。例如，由四个整型和一个字符串组成的数组的编码如下：</p>
+<blockquote>
+<p>*5\r\n<br>:1\r\n<br>:2\r\n<br>:3\r\n<br>:4\r\n<br>$6\r\n<br>foobar\r\n</p>
+</blockquote>
+<p>(该响应被清晰的分割成多行)。<br>服务器发送的第一行是 <code>*5\r\n</code>  是为了指明有5个响应。 然后由这些响应(应答)组成一个多批量的响应Item被传输。<br>Redis 也定义了空数组，它也是指定空值的另一种方式(通常使用空批量字符串<code>Null Bulk String</code> ,但是由于历史原因，它有两种格式来表示)。<br>例如，当 <code>BLPOP</code> 超时 时，返回一个有-1计数的空数组，如下：</p>
+<blockquote>
+<p>“*-1\r\n”</p>
+</blockquote>
+<p>当 Redis 响应一个空数组时，Redis客户端API 应当返回一个 空对象而不是一个空数组。对空列表和不同条件(例如 <code>BLPOP</code> 命令的超时条件)之间进行区分是有必要的。在RESP中也可以在数组中使用数组。例如两个数组组成的数组的编码如下：</p>
+<blockquote>
+<p><em>2\r\n
+</em>3\r\n<br>:1\r\n<br>:2\r\n<br>:3\r\n<br>*2\r\n<br>+Foo\r\n<br>-Bar\r\n</p>
+</blockquote>
+<p>(格式被分成多行是为了便于阅读)</p>
+<p>上述<code>RESP</code>数据类型由两个数组组成，其中一个由三个整数1，2，3组成，另外一个由简单字符串和错误类型组成。</p>
 <hr>
-<h3 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@requires_authorization</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">somefunc</span><span class="params">(param1=<span class="string">''</span>, param2=<span class="number">0</span>)</span>:</span></div><div class="line">    <span class="string">'''A docstring'''</span></div><div class="line">    <span class="keyword">if</span> param1 &gt; param2: <span class="comment"># interesting</span></div><div class="line">        <span class="keyword">print</span> <span class="string">'Greater'</span></div><div class="line">    <span class="keyword">return</span> (param2 - param1 + <span class="number">1</span>) <span class="keyword">or</span> <span class="keyword">None</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SomeClass</span>:</span></div><div class="line">    <span class="keyword">pass</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>message = <span class="string">'''interpreter</span></div><div class="line"><span class="meta">... </span>prompt'''</div></pre></td></tr></table></figure>
-<h3 id="LaTeX-公式"><a href="#LaTeX-公式" class="headerlink" title="LaTeX 公式"></a>LaTeX 公式</h3><p>可以创建行内公式，例如 $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$。或者块级公式：</p>
-<p>$$    x = \dfrac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$</p>
-<h3 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h3><table>
-<thead>
-<tr>
-<th style="text-align:left">Item</th>
-<th style="text-align:right">Value</th>
-<th style="text-align:center">Qty</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">Computer</td>
-<td style="text-align:right">1600 USD</td>
-<td style="text-align:center">5</td>
-</tr>
-<tr>
-<td style="text-align:left">Phone</td>
-<td style="text-align:right">12 USD</td>
-<td style="text-align:center">12</td>
-</tr>
-<tr>
-<td style="text-align:left">Pipe</td>
-<td style="text-align:right">1 USD</td>
-<td style="text-align:center">234</td>
-</tr>
-</tbody>
-</table>
+<h2 id="数组中的空元素"><a href="#数组中的空元素" class="headerlink" title="数组中的空元素"></a>数组中的空元素</h2><p>数组中的单个元素可能是Null。在Redis响应这个使用这种是为了发信号通知这个元素已经丢失且不是空字符串。当使用<code>SORT</code>命令的GET模式选项且缺少指定key时会发横这种情况。空数组响应示例如下</p>
+<blockquote>
+<p><code>*3\r\n</code><br><code>$3\r\n</code><br><code>foo\r\n</code><br><code>$-1\r\n</code><br><code>$3\r\n</code><br><code>bar\r\n</code></p>
+</blockquote>
+<p>第二个元素是Null。而客户端应该像这样返回：</p>
+<blockquote>
+<p>[“foo”,nil,”bar”]</p>
+</blockquote>
+<p>需要注意的是，这不是之前章节中所述的一个例外，这里只是使用这个例子来进一步说明特定协议。</p>
+<hr>
+<h2 id="发送命令到-Redis-Server"><a href="#发送命令到-Redis-Server" class="headerlink" title="发送命令到 Redis Server"></a>发送命令到 Redis Server</h2><p> 现在如果你已经熟悉了<code>RESP</code>序列化协议，那么你将会很容易的编写一个Redis客户端库的实现。我们可以进一步详细说明一下客户端和服务端的交互是如何工作的：</p>
+<ul>
+<li>客户端发送一个由多个字符串组成的<code>RESP</code>数组到服务端</li>
+<li>Redis 服务端发送任何有效的<code>RESP</code>数据类型作为答复来响应给客户端</li>
+</ul>
+<p>因此，可以以以下示例讲解这个简单的交互：<br>为了获取存储key’的mylist的长度，的客户端 发送<code>LLEN mylist</code>命令，然后服务端用一个整数来响应(C ： 客户端，S：服务端)。</p>
+<blockquote>
+<p><code>C: *2\r\n</code><br><code>C: $4\r\n</code><br><code>C: LLEN\r\n</code><br><code>C: $6\r\n</code><br><code>C: mylist\r\n</code><br><code>S: :48293\r\n</code></p>
+</blockquote>
+<p>通常我们用换行来分开协议的不同部分，但是实际上的交互是客户端会将 <code>*2\r\n$4\r\nLLEN\r\n$6\r\nmylist\r\n</code> 作为一个整体来发送。</p>
+<hr>
+<h2 id="多命令和管道"><a href="#多命令和管道" class="headerlink" title="多命令和管道"></a>多命令和管道</h2><p>客户端使用同一个连接来发送多条命令。也支持管道，因此多条命令可以通过客户端的一个单独的写命令来发送，这样就不需要在发出下一个命令之前读取前一个命令的服务端的响应。所有的响应在命令执行结束时读取。<a href="http://redis.io/topics/pipelining" target="_blank" rel="external">详细说明，请移步这里</a></p>
+<hr>
+<h2 id="内部命令"><a href="#内部命令" class="headerlink" title="内部命令"></a>内部命令</h2><p>有时候，你仅仅想执行<code>telnet</code>，这时就需要发送命令到<code>Redis</code>服务器。然而<code>Redis</code>协议是一种不是很理想的交互会话的简单实现，<code>redis-cli</code>并不总是可用的。出于这个原因，<code>Redis</code>也接收一种为人类设计的特殊方式的命令，这种命令被称为内联命令格式。</p>
+<p>下面是使用内联命令完成 <code>server/client</code>聊天的示例(S：服务器聊天，C：客户端聊天)：</p>
+<blockquote>
+<p>C: PING<br>S: +PONG</p>
+</blockquote>
+<p>下面是一个内联命令返回一个整数的示例：</p>
+<blockquote>
+<p>C: EXISTS somekey<br>S: :0</p>
+</blockquote>
+<p>基本上你现在可以在一个<code>telnet</code>会话中简单的写一个空格分隔参数。由于没有请求是以以<code>*</code>(*被使用在统一请求协议中)开头的，因此<code>Redis</code>能够检测到这种情况并分析出你的命令。</p>
+<hr>
+<h2 id="高性能Redis协议解析器"><a href="#高性能Redis协议解析器" class="headerlink" title="高性能Redis协议解析器"></a>高性能<code>Redis</code>协议解析器</h2><p><code>Redis</code>协议是人类可读而且容易实现的，因此它可以使用一种性能相似的二进制协议来实现。<br><code>RESP</code>使用前缀来传输批量数据的产长度，因此永远不需要扫描特殊字符(例如<code>JSON</code>)的负载，也不需要引用需要发送到服务器的有效负载。</p>
+<p>批量和多个批量的长度可以用执行单一个字符的单个操作的代码来处理，虽然同时会扫描到<code>CR</code>字符,如下代码：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#include <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">void</span>) &#123;</div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> *p = <span class="string">"$123\r\n"</span>;</div><div class="line">    <span class="keyword">int</span> len = <span class="number">0</span>;</div><div class="line">    p++;</div><div class="line">    <span class="keyword">while</span>(*p != <span class="string">'\r'</span>) &#123;</div><div class="line">        len = (len*<span class="number">10</span>)+(*p - <span class="string">'0'</span>);</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/* Now p points at '\r', and the len is in bulk_len. */</span></div><div class="line">    printf(<span class="string">"%d\n"</span>, len);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第一个<code>CR</code>被识别后，可以和下面的<code>LF</code>一样不需要任何处理的跳过。然后，可以使用一个不以任何方式检查有效负载的单度操作来读取大量数据。最后，其余的<code>CR</code>和<code>LF</code>字符会被丢弃，没有任何处理。</p>
+<p>而性能相媲美的二进制协议的<code>Redis</code>协议简单实现了多数高层次的语言，减少客户端软件的<code>bug</code>数。</p>
+<hr>
+<p>翻译自：<a href="http://redis.io/topics/protocol" target="_blank" rel="external">Reids-Protocol</a><br>下一篇：<a href="http://redis.io/topics/mass-insert" target="_blank" rel="external">Redis批量导入</a><br>另 ： <a href="https://github.com/MSOpenTech/redis/releases" target="_blank" rel="external">Redis Windows版本下载</a></p>
 
       
     </div>
@@ -666,7 +697,7 @@ Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)�
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis-协议"><span class="nav-number">1.</span> <span class="nav-text">Redis 协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis协议规范"><span class="nav-number">1.1.</span> <span class="nav-text">Redis协议规范</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络层"><span class="nav-number">1.2.</span> <span class="nav-text">网络层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求响应模型"><span class="nav-number">1.3.</span> <span class="nav-text">请求响应模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#协议描述"><span class="nav-number">1.4.</span> <span class="nav-text">协议描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Simple-Strings"><span class="nav-number">1.5.</span> <span class="nav-text">RESP Simple Strings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Errors"><span class="nav-number">1.6.</span> <span class="nav-text">RESP Errors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Integers"><span class="nav-number">1.7.</span> <span class="nav-text">RESP Integers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Bulk-Strings"><span class="nav-number">1.8.</span> <span class="nav-text">RESP Bulk Strings</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码块"><span class="nav-number">1.8.1.</span> <span class="nav-text">代码块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LaTeX-公式"><span class="nav-number">1.8.2.</span> <span class="nav-text">LaTeX 公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#表格"><span class="nav-number">1.8.3.</span> <span class="nav-text">表格</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis-协议"><span class="nav-number">1.</span> <span class="nav-text">Redis 协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis协议规范"><span class="nav-number">1.1.</span> <span class="nav-text">Redis协议规范</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络层"><span class="nav-number">1.2.</span> <span class="nav-text">网络层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求响应模型"><span class="nav-number">1.3.</span> <span class="nav-text">请求响应模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#协议描述"><span class="nav-number">1.4.</span> <span class="nav-text">协议描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Simple-Strings"><span class="nav-number">1.5.</span> <span class="nav-text">RESP Simple Strings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Errors"><span class="nav-number">1.6.</span> <span class="nav-text">RESP Errors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Integers"><span class="nav-number">1.7.</span> <span class="nav-text">RESP Integers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Bulk-Strings"><span class="nav-number">1.8.</span> <span class="nav-text">RESP Bulk Strings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Arrays"><span class="nav-number">1.9.</span> <span class="nav-text">RESP Arrays</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组中的空元素"><span class="nav-number">1.10.</span> <span class="nav-text">数组中的空元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发送命令到-Redis-Server"><span class="nav-number">1.11.</span> <span class="nav-text">发送命令到 Redis Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多命令和管道"><span class="nav-number">1.12.</span> <span class="nav-text">多命令和管道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内部命令"><span class="nav-number">1.13.</span> <span class="nav-text">内部命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高性能Redis协议解析器"><span class="nav-number">1.14.</span> <span class="nav-text">高性能Redis协议解析器</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
