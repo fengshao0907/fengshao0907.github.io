@@ -1,0 +1,1005 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Reids protocol," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis Protocol specification（Redis协议规范）">
+<meta property="og:url" content="http://yoursite.com/2016/07/17/Redis-Protocol-specification（Redis协议规范）/index.html">
+<meta property="og:site_name" content="Mr岳的技术博客">
+<meta property="og:description" content="Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
+<meta property="og:updated_time" content="2016-07-18T09:50:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis Protocol specification（Redis协议规范）">
+<meta name="twitter:description" content="Redis客户端和服务端通信使用的协议称为RESP(Redis序列化协议)。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/17/Redis-Protocol-specification（Redis协议规范）/"/>
+
+  <title> Redis Protocol specification（Redis协议规范） | Mr岳的技术博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?14dfdac6b6d6b979cf81aeb8139f10c2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Mr岳的技术博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Redis Protocol specification（Redis协议规范）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-17T23:13:52+08:00" content="2016-07-17">
+              2016-07-17
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/17/Redis-Protocol-specification（Redis协议规范）/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/17/Redis-Protocol-specification（Redis协议规范）/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/07/17/Redis-Protocol-specification（Redis协议规范）/" class="leancloud_visitors" data-flag-title="Redis Protocol specification（Redis协议规范）">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p><code>Redis</code>客户端和服务端通信使用的协议称为<code>RESP</code>(<code>Redis</code>序列化协议)。</p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="Redis-协议"><a href="#Redis-协议" class="headerlink" title="Redis 协议"></a>Redis 协议</h1><h2 id="Redis协议规范"><a href="#Redis协议规范" class="headerlink" title="Redis协议规范"></a><code>Redis</code>协议规范</h2><p><code>Redis</code>客户端和服务端通信使用的协议成为<code>RESP</code>(<code>Redis</code>序列化协议)。该协议是专门为<code>Redis</code>设计的，当然也可以用于其他 client-server 的软件项目。</p>
+<p><code>RESP</code> 是一种基于以下几点考虑上的折中协议</p>
+<ul>
+<li>简单实现</li>
+<li>快速解析</li>
+<li>人类可读</li>
+</ul>
+<hr>
+<p><code>RESP</code> 能够将不同的数据类型序列化，比如 整型、字符串、数组，也有一个特定的错误类型。请求从客户端发送到服务器的<code>Redis</code>作为代表该命令的参数来执行字符串数组。<code>Redis</code>使用特定数据类型来响应客户端请求。</p>
+<p><code>RESP</code> 是一种二进制安全的，并且不需要在进程间批量传输的协议，因为它使用前缀长度去批量数据传输。</p>
+<blockquote>
+<p>这里概述的协议只用户客户端-服务端通信。<code>Redis Cluster</code> 使用的是一种旨在节点间消息交换的不同的二进制协议。</p>
+</blockquote>
+<hr>
+<h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><p><code>Redis Client</code>通过 建立一个<code>TCP</code> 连接到端口6379 来连接<code>Redis Server</code>。</p>
+<p>然而 <code>RESP</code> 在技术上并非特定的<code>TCP</code>，在<code>Redis</code> 协议仅仅被用在与<code>TCP</code>建立连接(或者等效的面向流的连接，如 <code>Unix Sockets</code>)的上下文中。</p>
+<hr>
+<h2 id="请求响应模型"><a href="#请求响应模型" class="headerlink" title="请求响应模型"></a>请求响应模型</h2><p><code>Redis</code> 接收由不同参数组成的命令。一旦命令被接收到，它就会被服务端处理并且会发送响应给客户端。</p>
+<p>这可能是最简单的模型，然而有另外两种情况：</p>
+<ul>
+<li><code>Redis</code> 支持管道流。因此 它使客户端一次发送多个命令成为可能，之后等待答复/响应。</li>
+<li>当一个 <code>Redis</code> 客户端订阅一个<code>Pub/Sub channel</code> 时，协议就会转换语义变成一种<code>push</code>协议，此时客户端不再需要发送命令，因为服务器会自动给客户端发送消息，这些消息会被尽可能快的收到。</li>
+</ul>
+<p>不包括以上两点，<code>Redis</code> 就是一个简单的 请求-响应 协议。</p>
+<hr>
+<h2 id="协议描述"><a href="#协议描述" class="headerlink" title="协议描述"></a>协议描述</h2><p><code>Redis 1.2</code> 时就介绍过 <code>RESP</code>，但是从 <code>Redis 2.0</code> 开始，他成为一种与 <code>Redis Server</code> 通信的标准协议。这个协议就是在 <code>Redis</code> 客户端要实现的协议。</p>
+<p><code>RESP</code> 实际上是一个支持以下数据类型序列化的协议：简单字符串、整型、字符串、数组、错误。</p>
+<p><code>RESP</code> 作为一种请求-响应协议以以下方式被用在 <code>Redis</code> 中：</p>
+<ul>
+<li><code>RESP</code> 作为一个大字符串数组 被<code>Client</code> 发送命令到 <code>Redis Server</code> 端</li>
+<li><code>Server</code> 端 用根据命令实现的其中的一种 RESP 类型来响应<code>Client</code> 请求。</li>
+</ul>
+<p>在 <code>RESP</code> 协议中，数据类型取决于第一个字节：</p>
+<ul>
+<li>对于简单字符串，响应的第一个字节是 “<code>+</code>“</li>
+<li>对于错误，响应的第一个字节是 “<code>-</code>“</li>
+<li>对于整型，响应的第一个字节是 “<code>:</code>“</li>
+<li>对于批量字符串，响应的第一个字节是 “<code>$</code>“</li>
+<li>对于数组，响应的第一个字节是 “<code>*</code>“</li>
+</ul>
+<p>此外，<code>RESP</code> 可以使用一个特定的批量字符串或数组的特殊变化来表示一个空值。<br><code>RESP</code> 协议的不同部分都终止了与<code>&quot;\r\n&quot;</code>CRLF）。</p>
+<hr>
+<h2 id="RESP-Simple-Strings"><a href="#RESP-Simple-Strings" class="headerlink" title="RESP Simple Strings"></a><code>RESP Simple Strings</code></h2><p>简单字符串的编码方式如下：<code>+</code>字符之后紧跟着一个不包含<code>CR</code>或<code>LF</code>字符的字符串(不允许换行)，终止符是 <code>CRLF(&quot;\r\n&quot;)</code>.</p>
+<p>简单字符串是用来传输非二进制安全字符串的最小开销。例如 <code>Redis</code> 恢复<code>OK</code>时，只需要用以下5个字节进行编码 <code>&quot;+OK\r\n&quot;</code>。</p>
+<p>为了发送二进制安全的字符串，使用 <code>RESP</code> 批量字符串来代替。当 <code>Redis</code> 回复/响应 一个简单字符串时，客户端应该返回到调用一个由第一个字符后的<code>&quot;+&quot;</code>为结尾的字符串的字符串，不包含终止 <code>CRLF</code>字节。</p>
+<h2 id="RESP-Errors"><a href="#RESP-Errors" class="headerlink" title="RESP Errors"></a>RESP Errors</h2><p><code>RESP Errors</code> 是一个特殊的数据类型。其实错误类型 跟 <code>RESP</code> 简单字符串很像，只不过它的第一个字符是一个减号<code>&quot;-&quot;</code> ，而不是 “+”。简单字符串 和 <code>Errors</code> 在 <code>RESP</code> 中真正的区别是 <code>Errors</code> 在客户端被作为异常处理，并且构成 <code>Errors</code> 类型的字符串就是错误信息本身。<br>基本格式如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">"-Error Message\r\n"</span></div></pre></td></tr></table></figure></p>
+<p>错误响应只会在发生错误时发送，例如如果你试图执行一个对错误数据类型的操作，或者执行一个不存在的命令，等等。当收到错误响应时，应该由客户端引发一个异常。<br>以下就是错误响应的示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-ERR unknown command <span class="string">'foobar'</span></div><div class="line">-WRONGTYPE Operation against a key holding the wrong kind of value</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>第一个词后的<code>&quot;-&quot;</code>，到第一个空格或换行，代表返回的错误类型。这个仅仅是 <code>Redis</code> 的一个约定并不是 <code>RESP Errors</code> 错误格式的一部分。</p>
+</blockquote>
+<p>例如，<code>ERR</code>是一般错误，而<code>WRONGTYPE</code>是一个更加具体的错苏，意味着客户端试图执行一个针对错误数据类型的操作。这被称为一个错误前缀，是一种允许客户端理解服务端返回的错误类型的方式，它不依赖于给定的确切消息。<br>客户端实现可能会为不同的错误返回不同的异常类型，或者可能提供一个通用的方法来捕获异常，该方法直接把错误的名称作为字符串提供类调用方。<br>然而，这样的功能不应该被认为是最关重要的，因为它很少被用到，而且客户端实现可能只是返回一个通用的错误条件，例如 false。</p>
+<hr>
+<h2 id="RESP-Integers"><a href="#RESP-Integers" class="headerlink" title="RESP Integers"></a>RESP Integers</h2><p>这种类型仅仅只用 CRLF 终止符代表一个整数，以”:” 作为前缀。如： </p>
+<blockquote>
+<p>“:0\r\n”<br>“:1000\r\n” </p>
+</blockquote>
+<p>这些都是整数响应。<br>很多 Redis 命令返回 RESP整数，向 INCR、LLEN 、LASTSAVE。<br>返回的整数没有特殊的意义，只是一个INCR的数字递增或者是执行LASTSAVE的Unix 时间等等。但是，返回的整数必须保证是在一个<strong>有符号的64位整数范围内</strong>。整型响应被广泛使用以返回 TURE 或 FALSE。比如像 EXISTS 、 SISMEMBER命令返回1表示 TURE，0 表示 FALSE。<br>其他命令比如像 SADD、SETNX，如果操作执行成功则返回1，否则返回0。<br>以下命令将返回整数响应：</p>
+<blockquote>
+<p>SETNX, DEL, EXISTS, INCR, INCRBY, DECR, DECRBY, DBSIZE, LASTSAVE,RENAMENX, MOVE, LLEN, SADD, SREM, SISMEMBER, SCARD。</p>
+</blockquote>
+<hr>
+<h2 id="RESP-Bulk-Strings"><a href="#RESP-Bulk-Strings" class="headerlink" title="RESP Bulk Strings"></a>RESP Bulk Strings</h2><blockquote>
+<p>字符串块 或者 批量字符串<br>我习惯上成为 批量字符串，此处显然 翻译成 <strong>字符串块</strong> 更合适</p>
+</blockquote>
+<p>字符串块被用来表示一个二进制安全的最大长度为 512MB 的字符串。<br>块字符串以下列方式编码：</p>
+<ul>
+<li>“$”字节依次组成的字符串的字节数(前缀长度)，以 CRLF终止。</li>
+<li>真实的字符串数据</li>
+<li>最后一个是回车换行符(CRLF  :  \r\n)</li>
+</ul>
+<p>所以字符串”foobar”的编码格式如下：</p>
+<blockquote>
+<p>“$6\r\nfoobar\r\n”</p>
+</blockquote>
+<p>空字符串</p>
+<blockquote>
+<p>“$0\r\n\r\n”</p>
+</blockquote>
+<p>RESP 字符串块也可以用于不存在的值，需要使用特殊的格式来表示一个 NULL值。在这个特殊的格式中，长度为 -1，并且没有数据，所以NULL 表示为：</p>
+<blockquote>
+<p>“$-1\r\n”</p>
+</blockquote>
+<p>这被称为一个空字符串。<br>当服务器用一个空字符串响应时，客户端API不应该返回一个空字符串，而应该是一个nil对象。例如，Ruby API应该返回’nil’，而C API应该返回NULL(或者设置一个特殊的标识符)，等等。</p>
+<hr>
+<h2 id="RESP-Arrays"><a href="#RESP-Arrays" class="headerlink" title="RESP Arrays"></a>RESP Arrays</h2><p>客户端使用RESP Arrays发送命令到Redis Server。同样，某些 Redis 命令 使用 RESP Arrays 作为响应类型 返回给客户端集合元素。像 <strong>LRANGE</strong> 命令 就需要返回含有多个值的list列表。<br>使用以下格式来发送 <strong>RESP Arrays</strong></p>
+<blockquote>
+<p>   一个 * 字符作为第一个字节，随后紧跟数组元素的个数，之后是 CRLF \r\n<br> RESP 数组类型的每个元素</p>
+</blockquote>
+<p>因此，可以使用如下方式表示一个空数组：</p>
+<blockquote>
+<p>“*0\r\n”</p>
+</blockquote>
+<p>包含字符串块 “foo”和”bar”的数组的编码方式如下：</p>
+<blockquote>
+<p>“*2\r\n$3\r\nfoo\r\n$3\r\nbar\r\n”</p>
+</blockquote>
+<p>正如你所看到的，<code>*&lt;count&gt;\r\n</code> 部分是数组的前缀，数组的其他数据类型只是一个串接着一个。如下对三个整数数组的编码如下：</p>
+<blockquote>
+<p>“*3\r\n:1\r\n:2\r\n:3\r\n”</p>
+</blockquote>
+<p>数组也可以包含多种混合类型，数组中的元素不必都是相同的数据类型。例如，由四个整型和一个字符串组成的数组的编码如下：</p>
+<blockquote>
+<p>*5\r\n<br>:1\r\n<br>:2\r\n<br>:3\r\n<br>:4\r\n<br>$6\r\n<br>foobar\r\n</p>
+</blockquote>
+<p>(该响应被清晰的分割成多行)。<br>服务器发送的第一行是 <code>*5\r\n</code>  是为了指明有5个响应。 然后由这些响应(应答)组成一个多批量的响应Item被传输。<br>Redis 也定义了空数组，它也是指定空值的另一种方式(通常使用空批量字符串<code>Null Bulk String</code> ,但是由于历史原因，它有两种格式来表示)。<br>例如，当 <code>BLPOP</code> 超时 时，返回一个有-1计数的空数组，如下：</p>
+<blockquote>
+<p>“*-1\r\n”</p>
+</blockquote>
+<p>当 Redis 响应一个空数组时，Redis客户端API 应当返回一个 空对象而不是一个空数组。对空列表和不同条件(例如 <code>BLPOP</code> 命令的超时条件)之间进行区分是有必要的。在RESP中也可以在数组中使用数组。例如两个数组组成的数组的编码如下：</p>
+<blockquote>
+<p><em>2\r\n
+</em>3\r\n<br>:1\r\n<br>:2\r\n<br>:3\r\n<br>*2\r\n<br>+Foo\r\n<br>-Bar\r\n</p>
+</blockquote>
+<p>(格式被分成多行是为了便于阅读)</p>
+<p>上述<code>RESP</code>数据类型由两个数组组成，其中一个由三个整数1，2，3组成，另外一个由简单字符串和错误类型组成。</p>
+<hr>
+<h2 id="数组中的空元素"><a href="#数组中的空元素" class="headerlink" title="数组中的空元素"></a>数组中的空元素</h2><p>数组中的单个元素可能是Null。在Redis响应这个使用这种是为了发信号通知这个元素已经丢失且不是空字符串。当使用<code>SORT</code>命令的GET模式选项且缺少指定key时会发横这种情况。空数组响应示例如下</p>
+<blockquote>
+<p><code>*3\r\n</code><br><code>$3\r\n</code><br><code>foo\r\n</code><br><code>$-1\r\n</code><br><code>$3\r\n</code><br><code>bar\r\n</code></p>
+</blockquote>
+<p>第二个元素是Null。而客户端应该像这样返回：</p>
+<blockquote>
+<p>[“foo”,nil,”bar”]</p>
+</blockquote>
+<p>需要注意的是，这不是之前章节中所述的一个例外，这里只是使用这个例子来进一步说明特定协议。</p>
+<hr>
+<h2 id="发送命令到-Redis-Server"><a href="#发送命令到-Redis-Server" class="headerlink" title="发送命令到 Redis Server"></a>发送命令到 Redis Server</h2><p> 现在如果你已经熟悉了<code>RESP</code>序列化协议，那么你将会很容易的编写一个Redis客户端库的实现。我们可以进一步详细说明一下客户端和服务端的交互是如何工作的：</p>
+<ul>
+<li>客户端发送一个由多个字符串组成的<code>RESP</code>数组到服务端</li>
+<li>Redis 服务端发送任何有效的<code>RESP</code>数据类型作为答复来响应给客户端</li>
+</ul>
+<p>因此，可以以以下示例讲解这个简单的交互：<br>为了获取存储key’的mylist的长度，的客户端 发送<code>LLEN mylist</code>命令，然后服务端用一个整数来响应(C ： 客户端，S：服务端)。</p>
+<blockquote>
+<p><code>C: *2\r\n</code><br><code>C: $4\r\n</code><br><code>C: LLEN\r\n</code><br><code>C: $6\r\n</code><br><code>C: mylist\r\n</code><br><code>S: :48293\r\n</code></p>
+</blockquote>
+<p>通常我们用换行来分开协议的不同部分，但是实际上的交互是客户端会将 <code>*2\r\n$4\r\nLLEN\r\n$6\r\nmylist\r\n</code> 作为一个整体来发送。</p>
+<hr>
+<h2 id="多命令和管道"><a href="#多命令和管道" class="headerlink" title="多命令和管道"></a>多命令和管道</h2><p>客户端使用同一个连接来发送多条命令。也支持管道，因此多条命令可以通过客户端的一个单独的写命令来发送，这样就不需要在发出下一个命令之前读取前一个命令的服务端的响应。所有的响应在命令执行结束时读取。<a href="http://redis.io/topics/pipelining" target="_blank" rel="external">详细说明，请移步这里</a></p>
+<hr>
+<h2 id="内部命令"><a href="#内部命令" class="headerlink" title="内部命令"></a>内部命令</h2><p>有时候，你仅仅想执行<code>telnet</code>，这时就需要发送命令到<code>Redis</code>服务器。然而<code>Redis</code>协议是一种不是很理想的交互会话的简单实现，<code>redis-cli</code>并不总是可用的。出于这个原因，<code>Redis</code>也接收一种为人类设计的特殊方式的命令，这种命令被称为内联命令格式。</p>
+<p>下面是使用内联命令完成 <code>server/client</code>聊天的示例(S：服务器聊天，C：客户端聊天)：</p>
+<blockquote>
+<p>C: PING<br>S: +PONG</p>
+</blockquote>
+<p>下面是一个内联命令返回一个整数的示例：</p>
+<blockquote>
+<p>C: EXISTS somekey<br>S: :0</p>
+</blockquote>
+<p>基本上你现在可以在一个<code>telnet</code>会话中简单的写一个空格分隔参数。由于没有请求是以以<code>*</code>(*被使用在统一请求协议中)开头的，因此<code>Redis</code>能够检测到这种情况并分析出你的命令。</p>
+<hr>
+<h2 id="高性能Redis协议解析器"><a href="#高性能Redis协议解析器" class="headerlink" title="高性能Redis协议解析器"></a>高性能<code>Redis</code>协议解析器</h2><p><code>Redis</code>协议是人类可读而且容易实现的，因此它可以使用一种性能相似的二进制协议来实现。<br><code>RESP</code>使用前缀来传输批量数据的产长度，因此永远不需要扫描特殊字符(例如<code>JSON</code>)的负载，也不需要引用需要发送到服务器的有效负载。</p>
+<p>批量和多个批量的长度可以用执行单一个字符的单个操作的代码来处理，虽然同时会扫描到<code>CR</code>字符,如下代码：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#include <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">void</span>) &#123;</div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">char</span> *p = <span class="string">"$123\r\n"</span>;</div><div class="line">    <span class="keyword">int</span> len = <span class="number">0</span>;</div><div class="line">    p++;</div><div class="line">    <span class="keyword">while</span>(*p != <span class="string">'\r'</span>) &#123;</div><div class="line">        len = (len*<span class="number">10</span>)+(*p - <span class="string">'0'</span>);</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/* Now p points at '\r', and the len is in bulk_len. */</span></div><div class="line">    printf(<span class="string">"%d\n"</span>, len);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>第一个<code>CR</code>被识别后，可以和下面的<code>LF</code>一样不需要任何处理的跳过。然后，可以使用一个不以任何方式检查有效负载的单度操作来读取大量数据。最后，其余的<code>CR</code>和<code>LF</code>字符会被丢弃，没有任何处理。</p>
+<p>而性能相媲美的二进制协议的<code>Redis</code>协议简单实现了多数高层次的语言，减少客户端软件的<code>bug</code>数。</p>
+<hr>
+<p>翻译自：<a href="http://redis.io/topics/protocol" target="_blank" rel="external">Reids-Protocol</a><br>下一篇：<a href="http://redis.io/topics/mass-insert" target="_blank" rel="external">Redis批量导入</a><br>另 ： <a href="https://github.com/MSOpenTech/redis/releases" target="_blank" rel="external">Redis Windows版本下载</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Reids-protocol/" rel="tag">#Reids protocol</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/11/GitHub-Pages-博客搭建/" rel="next" title="GitHub Pages 博客搭建">
+                <i class="fa fa-chevron-left"></i> GitHub Pages 博客搭建
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/18/Redis批量插入/" rel="prev" title="Redis批量插入">
+                Redis批量插入 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/17/Redis-Protocol-specification（Redis协议规范）/"
+           data-title="Redis Protocol specification（Redis协议规范）" data-url="http://yoursite.com/2016/07/17/Redis-Protocol-specification（Redis协议规范）/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/头像.jpg"
+               alt="Mr岳" />
+          <p class="site-author-name" itemprop="name">Mr岳</p>
+          <p class="site-description motion-element" itemprop="description">There are no two identical leaves in the world.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/fengshao0907" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/3085325177/profile" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/xiaoxiaoye" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" title="MacTalk" target="_blank">MacTalk</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="HeDengCheng" target="_blank">HeDengCheng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://mysql.taobao.org/monthly/2016/06/" title="数据库内核月报" target="_blank">数据库内核月报</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://es.xiaoleilu.com/" title="ElasticSearch" target="_blank">ElasticSearch</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis-协议"><span class="nav-number">1.</span> <span class="nav-text">Redis 协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis协议规范"><span class="nav-number">1.1.</span> <span class="nav-text">Redis协议规范</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络层"><span class="nav-number">1.2.</span> <span class="nav-text">网络层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求响应模型"><span class="nav-number">1.3.</span> <span class="nav-text">请求响应模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#协议描述"><span class="nav-number">1.4.</span> <span class="nav-text">协议描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Simple-Strings"><span class="nav-number">1.5.</span> <span class="nav-text">RESP Simple Strings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Errors"><span class="nav-number">1.6.</span> <span class="nav-text">RESP Errors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Integers"><span class="nav-number">1.7.</span> <span class="nav-text">RESP Integers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Bulk-Strings"><span class="nav-number">1.8.</span> <span class="nav-text">RESP Bulk Strings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RESP-Arrays"><span class="nav-number">1.9.</span> <span class="nav-text">RESP Arrays</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数组中的空元素"><span class="nav-number">1.10.</span> <span class="nav-text">数组中的空元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发送命令到-Redis-Server"><span class="nav-number">1.11.</span> <span class="nav-text">发送命令到 Redis Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多命令和管道"><span class="nav-number">1.12.</span> <span class="nav-text">多命令和管道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内部命令"><span class="nav-number">1.13.</span> <span class="nav-text">内部命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高性能Redis协议解析器"><span class="nav-number">1.14.</span> <span class="nav-text">高性能Redis协议解析器</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2013 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr岳</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"fengshao0907"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("kTtTzkfBK0h3Db6QELtFmMYq-gzGzoHsz", "7iLht0UC6uCiSqVTjzy8QUc4");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
