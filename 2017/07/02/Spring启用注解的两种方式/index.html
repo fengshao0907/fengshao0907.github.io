@@ -1,0 +1,984 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Spring Annotation," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="Spring的context命名空间提供两个非常重要的注解 &amp;lt;context:annotation-config&amp;gt;和&amp;lt;context:component-scan&amp;gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring启用注解的两种方式">
+<meta property="og:url" content="http://fengshao0907.github.com/2017/07/02/Spring启用注解的两种方式/index.html">
+<meta property="og:site_name" content="Mr岳的技术博客">
+<meta property="og:description" content="Spring的context命名空间提供两个非常重要的注解 &amp;lt;context:annotation-config&amp;gt;和&amp;lt;context:component-scan&amp;gt;">
+<meta property="og:image" content="http://fengshao0907.github.com/uploads/springAnnotation1.png">
+<meta property="og:image" content="http://fengshao0907.github.com/uploads/springAnnotation2.png">
+<meta property="og:updated_time" content="2017-07-02T10:01:03.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring启用注解的两种方式">
+<meta name="twitter:description" content="Spring的context命名空间提供两个非常重要的注解 &amp;lt;context:annotation-config&amp;gt;和&amp;lt;context:component-scan&amp;gt;">
+<meta name="twitter:image" content="http://fengshao0907.github.com/uploads/springAnnotation1.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://fengshao0907.github.com/2017/07/02/Spring启用注解的两种方式/"/>
+
+  <title> Spring启用注解的两种方式 | Mr岳的技术博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?14dfdac6b6d6b979cf81aeb8139f10c2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Mr岳的技术博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Spring启用注解的两种方式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-07-02T17:22:08+08:00" content="2017-07-02">
+              2017-07-02
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/07/02/Spring启用注解的两种方式/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/07/02/Spring启用注解的两种方式/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/07/02/Spring启用注解的两种方式/" class="leancloud_visitors" data-flag-title="Spring启用注解的两种方式">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Spring的context命名空间提供两个非常重要的注解 <code>&lt;context:annotation-config&gt;</code>和<code>&lt;context:component-scan&gt;</code><br><a id="more"></a></p>
+<h1 id="lt-context-annotation-config-gt"><a href="#lt-context-annotation-config-gt" class="headerlink" title="&lt;context:annotation-config&gt;"></a><code>&lt;context:annotation-config&gt;</code></h1><blockquote>
+<p><code>&lt;context:annotation-config&gt;</code>的作用是 显示地向Spring容器中注册以下4个BeanPostProcessor，激活已经通过xml注册过的Bean，之后应用就可以通过注解直接使用Bean。</p>
+<ul>
+<li>AutowiredAnnotationBeanPostProcessor</li>
+<li>CommonAnnotationBeanPostProcessor</li>
+<li>PersistenceAnnotationBeanPostProcessor</li>
+<li>RequiredAnnotationBeanPostProcessor </li>
+</ul>
+</blockquote>
+<hr>
+<blockquote>
+<p>这4个<code>XxxxxxBeanPostProcessor</code>的作用就是为了让spring识别相应的注解。<br>如果想使用@Autowired，那么就必须事先在 Spring 容器中声明<code>AutowiredAnnotationBeanPostProcessor</code> Bean。声明方式如下</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;bean <span class="class"><span class="keyword">class</span></span>=<span class="string">"org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor "</span>/&gt;</div></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<ul>
+<li>如果想使用  @Resource 、@PostConstruct、@PreDestroy 等注解就必须声明<code>CommonAnnotationBeanPostProcessor</code>。</li>
+<li>如果想使用 @PersistenceContext注解，就必须声明PersistenceAnnotationBeanPostProcessor的Bean。</li>
+<li>如果想使用 @Required的注解，就必须声明RequiredAnnotationBeanPostProcessor的Bean。声明方式如下<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;bean <span class="class"><span class="keyword">class</span></span>=<span class="string">"org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor "</span>/&gt;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<hr>
+<blockquote>
+<p>如果想使用以上注解，需要直接在Spring配置文件中定义这些Bean，显然这种方式比较笨拙，也不够优雅。Spring为我们提供了一种极为方便注册这些BeanPostProcessor的方式，如下，它会隐式地向 Spring容器注册上述BeanPostProcessor。<code>&lt;context:annotation-config/&gt;</code></p>
+</blockquote>
+<h1 id="lt-context-component-scan-gt"><a href="#lt-context-component-scan-gt" class="headerlink" title="&lt;context:component-scan&gt;"></a><code>&lt;context:component-scan&gt;</code></h1><p><strong><code>&lt;context:component-scan&gt;</code> 除了具有<code>&lt;context:annotation-config/&gt;</code>的作用外，还具有以下作用</strong>：</p>
+<blockquote>
+<ul>
+<li>通过base-package属性执行一个需要扫描的基类包，Spring容器将会扫描这个基类包里的所有类并从类的注解(@Component @Controller@Service等)信息中获取Bean的定义信息。</li>
+<li>如果仅希望扫描特定的类而非基包下的所有类，那么可以使用resource-pattern属性过滤出特定的类，如下所示：<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;context:component-scan base-<span class="keyword">package</span>=<span class="string">"com.meituan"</span> resource-pattern=<span class="string">"anno/*.class"</span> /&gt;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<p>这里resource-pattern设置为 “anno/*.class” ， 意味着Spring仅会扫描基包里 anno 子包中的类。</p>
+<blockquote>
+<ul>
+<li>Spring还提供 <code>&lt;context:component-scan /&gt;</code>的过滤子元素实现来实现 <code>resource-pattern</code> 属性不能满足的一些特殊需求。比如：仅过滤基类包中实现了<code>XxxService</code>接口的类 或 标注类某个特定注解的类等。如下：<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;context:component-scan base-package ="com.meituan" &gt;</div><div class="line">    &lt;context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" /&gt;</div><div class="line">    &lt;context:include-filter type="aspectj" expression="com.meituan..*Controller+" /&gt;</div><div class="line">    &lt;context:exlude-filter type="regex" expression="com\.meituan\.anno.*"/&gt;</div><div class="line">&lt;/context:component-scan&gt;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</blockquote>
+<hr>
+<blockquote>
+<ul>
+<li>其中<code>&lt;context:include-filter&gt;</code>表示 要包含的目标类，而<code>&lt;context:exclude-filter&gt;</code>表示要排除在外的目标类。</li>
+<li>一个<code>&lt;context:component-scan&gt;</code>可以包含若干个<code>&lt;context:include-filter&gt;</code>和<code>&lt;context:exclude-filter&gt;</code>元素。</li>
+<li>这两个过滤元素均支持多种类型的过滤表达式，表达式类型如下：</li>
+</ul>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Filter Type</th>
+<th style="text-align:center">Example Expression</th>
+<th style="text-align:right">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>annotation (default)</td>
+<td style="text-align:center">org.example.SomeAnnotation</td>
+<td style="text-align:right">An annotation to be present at the type level in target components.所有标注了 XxxAnnotation的类。该类型针对 目标类<strong>是否标注了某个注解</strong>来进行过滤。</td>
+</tr>
+<tr>
+<td>assignable</td>
+<td style="text-align:center">org.example.SomeClass</td>
+<td style="text-align:right">A class (or interface) that the target components are assignable to (extend/implement).所有继承或实现 XxxClass 的类。该类型针对 目标类<strong>是否继承或实现某个特定类</strong>来进行过滤。</td>
+</tr>
+<tr>
+<td>aspectj</td>
+<td style="text-align:center">org.example..*Service+</td>
+<td style="text-align:right">An AspectJ type expression to be matched by the target components.所有类名以 Service结束的类以继承或扩展它们的类。该类型针对<strong>AspectJ表达式</strong>进行过滤。</td>
+</tr>
+<tr>
+<td>regex</td>
+<td style="text-align:center">org\.example\.Default.*</td>
+<td style="text-align:right">A regex expression to be matched by the target components class names.所有org.example.Default 类包下的类。该类型 使用<strong>正则表达式对目标类的类名</strong>进行过滤。</td>
+</tr>
+<tr>
+<td>custom</td>
+<td style="text-align:center">org.example.MyTypeFilter</td>
+<td style="text-align:right">A custom implementation of the org.springframework.core.type .TypeFilter interface.采用<strong>XxxTypeFilter采用代码的方式</strong>进行过滤。该类必须实现 org.springframework.core.type.TypeFilter 接口</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<blockquote>
+<p>在所有这些过滤类型中，除custom类型外，aspectj 的过滤表达式能力是最强的，它可以轻易的实现其他类型所能表达的过滤规则。<br>下面的例子忽略所有org.example 包下的 @Repository注解的类，注入org.example.*Stub结尾的包下的所有 Repository结尾的类。</p>
+</blockquote>
+<p>注解方式：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">@Configuration</div><div class="line">@ComponentScan(basePackages = "org.example",</div><div class="line">        includeFilters = @Filter(type = FilterType.REGEX, pattern = ".*Stub.*Repository"),</div><div class="line">        excludeFilters = @Filter(Repository.class))</div><div class="line">public class AppConfig &#123;</div><div class="line">    ...</div><div class="line">&#125;</div><div class="line">``` </div><div class="line">xml配置方式：</div><div class="line">```java</div><div class="line">&lt;beans&gt;</div><div class="line">    &lt;context:component-scan base-package="org.example"&gt;</div><div class="line">        &lt;context:include-filter type="regex"</div><div class="line">                expression=".*Stub.*Repository"/&gt;</div><div class="line">        &lt;context:exclude-filter type="annotation"</div><div class="line">                expression="org.springframework.stereotype.Repository"/&gt;</div><div class="line">    &lt;/context:component-scan&gt;</div><div class="line">&lt;/beans&gt;</div></pre></td></tr></table></figure>
+<hr>
+<h1 id="use-default-filters-属性"><a href="#use-default-filters-属性" class="headerlink" title="use-default-filters 属性"></a><code>use-default-filters</code> 属性</h1><blockquote>
+<p><code>&lt;context:component-scan&gt;</code> 有一个<code>use-default-filters</code>属性，该属性默认为<code>true</code>,这就意味着会扫描 指定包及其子包 的全部的标有<code>@Component</code>的类及其子注解子注解<code>@Service、@Reposity、@Controller</code>等，并注入<code>bean</code>。<br>如下配置，说明 ： <code>use-default-filter</code> 默认为 <code>true</code> ，此时 <code>Spring</code> 会对 <code>base-package</code>包或者<code>子包</code> 下的所有的进行<code>java</code>类进行扫描，并注入<code>bean</code>。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;context:component-scan base-<span class="keyword">package</span>=<span class="string">"com.meituan.hotel"</span> /&gt;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>但是这种扫描方式粒度过大，如果只想扫描 指定包下面的<code>Controller</code>，该怎么办？此时就可以用 <code>&lt;context:component-scan&gt;</code> 的 子标签<code>&lt;context:incluce-filter&gt;</code><br>如下配置，说明：此时<code>Spring</code>就只会扫描 <code>base-package</code>中有 <code>@Controller</code>注解 的java类，不会扫描<code>@Service、@Repository</code>注解的<code>java</code>类。</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;context:component-scan base-package="com.meituan.hotel.controller"&gt;  </div><div class="line">     &lt;context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/&gt;  </div><div class="line">&lt;/context:component-scan&gt;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>但是如果使用如下方式，<code>use-dafault-filter</code>默认为<code>ture</code>，不仅会扫描 <code>base-package</code>（注意值发生变化） 中 <code>@Controller</code>注解 的<code>java</code>类，还会扫描<code>@Service、@Repository</code> 注解的<code>java</code>类，这样可能造成一些问题</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;context:component-scan base-package="com.meituan.hotel"&gt;  </div><div class="line">     &lt;context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/&gt;  </div><div class="line">&lt;/context:component-scan&gt;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>此时  <code>&lt;context:include-filter/&gt;</code> 并没有起到作用，只要把<code>use-default-filter</code>设置成<code>false</code>就可以了。这样就可以避免 在<code>base-packeage</code>配置多个包名这种不是很优雅的方法来解决这个问题了。</p>
+</blockquote>
+<p><strong>原因分析：</strong></p>
+<blockquote>
+<ul>
+<li>先看 context:component-scan 标签的解析过程</li>
+</ul>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> org.springframework.context.config;</div><div class="line"> </div><div class="line"><span class="keyword">import</span> org.springframework.beans.factory.xml.NamespaceHandlerSupport;</div><div class="line"><span class="keyword">import</span> org.springframework.context.annotation.AnnotationConfigBeanDefinitionParser;</div><div class="line"><span class="keyword">import</span> org.springframework.context.annotation.ComponentScanBeanDefinitionParser;</div><div class="line"> </div><div class="line"><span class="comment">/**</span></div><div class="line"> * &#123;<span class="doctag">@link</span> org.springframework.beans.factory.xml.NamespaceHandler&#125;</div><div class="line"> * for the '&#123;<span class="doctag">@code</span> context&#125;' namespace.</div><div class="line"> *</div><div class="line"> * <span class="doctag">@author</span> Mark Fisher</div><div class="line"> * <span class="doctag">@author</span> Juergen Hoeller</div><div class="line"> * <span class="doctag">@since</span> 2.5</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContextNamespaceHandler</span> <span class="keyword">extends</span> <span class="title">NamespaceHandlerSupport</span> </span>&#123;</div><div class="line">   <span class="meta">@Override</span></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</div><div class="line">      registerBeanDefinitionParser(<span class="string">"property-placeholder"</span>, <span class="keyword">new</span> PropertyPlaceholderBeanDefinitionParser());</div><div class="line">      registerBeanDefinitionParser(<span class="string">"property-override"</span>, <span class="keyword">new</span> PropertyOverrideBeanDefinitionParser());</div><div class="line">      registerBeanDefinitionParser(<span class="string">"annotation-config"</span>, <span class="keyword">new</span> AnnotationConfigBeanDefinitionParser());</div><div class="line">      registerBeanDefinitionParser(<span class="string">"component-scan"</span>, <span class="keyword">new</span> ComponentScanBeanDefinitionParser());    <span class="comment">// 这里完成对&lt;context:component-scan/&gt;标签的解析</span></div><div class="line">      registerBeanDefinitionParser(<span class="string">"load-time-weaver"</span>, <span class="keyword">new</span> LoadTimeWeaverBeanDefinitionParser());</div><div class="line">      registerBeanDefinitionParser(<span class="string">"spring-configured"</span>, <span class="keyword">new</span> SpringConfiguredBeanDefinitionParser());</div><div class="line">      registerBeanDefinitionParser(<span class="string">"mbean-export"</span>, <span class="keyword">new</span> MBeanExportBeanDefinitionParser());</div><div class="line">      registerBeanDefinitionParser(<span class="string">"mbean-server"</span>, <span class="keyword">new</span> MBeanServerBeanDefinitionParser());</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p><code>ComponentScanBeanDefinitionParser</code>会读取配置文件信息并组装成<code>org.springframework.context.annotation.ClassPathBeanDefinitionScanner</code>进行处理；</p>
+</blockquote>
+<hr>
+<blockquote>
+<ul>
+<li>如果没有配置<code>&lt;context:component-scan&gt;</code>的<code>use-default-filters</code>属性，则默认为<code>true</code>，在创建<code>ClassPathBeanDefinitionScanner</code>时会根据<code>use-default-filters</code>是否为<code>true</code>来调用如下代码：</li>
+</ul>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Create a ClassPathScanningCandidateComponentProvider with the given &#123;<span class="doctag">@link</span> Environment&#125;.</div><div class="line"> * <span class="doctag">@param</span> useDefaultFilters whether to register the default filters for the</div><div class="line"> * &#123;<span class="doctag">@link</span> Component <span class="doctag">@Component</span>&#125;, &#123;<span class="doctag">@link</span> Repository <span class="doctag">@Repository</span>&#125;,</div><div class="line"> * &#123;<span class="doctag">@link</span> Service <span class="doctag">@Service</span>&#125;, and &#123;<span class="doctag">@link</span> Controller <span class="doctag">@Controller</span>&#125;</div><div class="line"> * stereotype annotations</div><div class="line"> * <span class="doctag">@param</span> environment the Environment to use</div><div class="line"> * <span class="doctag">@see</span> #registerDefaultFilters()</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">ClassPathScanningCandidateComponentProvider</span><span class="params">(<span class="keyword">boolean</span> useDefaultFilters, Environment environment)</span> </span>&#123;</div><div class="line">   <span class="keyword">if</span> (useDefaultFilters) &#123;</div><div class="line">      registerDefaultFilters();</div><div class="line">   &#125;</div><div class="line">   Assert.notNull(environment, <span class="string">"Environment must not be null"</span>);</div><div class="line">   <span class="keyword">this</span>.environment = environment;</div><div class="line">&#125;</div><div class="line">  </div><div class="line"><span class="comment">/**</span></div><div class="line"> * Register the default filter for &#123;<span class="doctag">@link</span> Component <span class="doctag">@Component</span>&#125;.</div><div class="line"> * &lt;p&gt;This will implicitly register all annotations that have the</div><div class="line"> * &#123;<span class="doctag">@link</span> Component <span class="doctag">@Component</span>&#125; meta-annotation including the</div><div class="line"> * &#123;<span class="doctag">@link</span> Repository <span class="doctag">@Repository</span>&#125;, &#123;<span class="doctag">@link</span> Service <span class="doctag">@Service</span>&#125;, and</div><div class="line"> * &#123;<span class="doctag">@link</span> Controller <span class="doctag">@Controller</span>&#125; stereotype annotations.</div><div class="line"> * &lt;p&gt;Also supports Java EE 6's &#123;<span class="doctag">@link</span> javax.annotation.ManagedBean&#125; and</div><div class="line"> * JSR-330's &#123;<span class="doctag">@link</span> javax.inject.Named&#125; annotations, if available.</div><div class="line"> *</div><div class="line"> */</div><div class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">registerDefaultFilters</span><span class="params">()</span> </span>&#123;</div><div class="line">   <span class="keyword">this</span>.includeFilters.add(<span class="keyword">new</span> AnnotationTypeFilter(Component.class));</div><div class="line">   ClassLoader cl = ClassPathScanningCandidateComponentProvider.class.getClassLoader();</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">      <span class="keyword">this</span>.includeFilters.add(<span class="keyword">new</span> AnnotationTypeFilter(</div><div class="line">            ((Class&lt;? extends Annotation&gt;) ClassUtils.forName(<span class="string">"javax.annotation.ManagedBean"</span>, cl)), <span class="keyword">false</span>));</div><div class="line">      logger.debug(<span class="string">"JSR-250 'javax.annotation.ManagedBean' found and supported for component scanning"</span>);</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">catch</span> (ClassNotFoundException ex) &#123;</div><div class="line">      <span class="comment">// JSR-250 1.1 API (as included in Java EE 6) not available - simply skip.</span></div><div class="line">   &#125;</div><div class="line">   <span class="keyword">try</span> &#123;</div><div class="line">      <span class="keyword">this</span>.includeFilters.add(<span class="keyword">new</span> AnnotationTypeFilter(</div><div class="line">            ((Class&lt;? extends Annotation&gt;) ClassUtils.forName(<span class="string">"javax.inject.Named"</span>, cl)), <span class="keyword">false</span>));</div><div class="line">      logger.debug(<span class="string">"JSR-330 'javax.inject.Named' annotation found and supported for component scanning"</span>);</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">catch</span> (ClassNotFoundException ex) &#123;</div><div class="line">      <span class="comment">// JSR-330 API not available - simply skip.</span></div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>可以看到默认<code>ClassPathBeanDefinitionScanner</code>会自动注册对<code>@Component、@ManagedBean、@Named</code>注解的<code>Bean</code>进行扫描。</strong></p>
+<blockquote>
+<ul>
+<li>在进行扫描时会通过include-filter 和 exclude-filter来判断你的Bean类是否是合法的：<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Determine whether the given class does not match any exclude filter</div><div class="line"> * and does match at least one include filter.</div><div class="line"> * <span class="doctag">@param</span> metadataReader the ASM ClassReader for the class</div><div class="line"> * <span class="doctag">@return</span> whether the class qualifies as a candidate component</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">isCandidateComponent</span><span class="params">(MetadataReader metadataReader)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">   <span class="keyword">for</span> (TypeFilter tf : <span class="keyword">this</span>.excludeFilters) &#123;</div><div class="line">      <span class="keyword">if</span> (tf.match(metadataReader, <span class="keyword">this</span>.metadataReaderFactory)) &#123;</div><div class="line">         <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">      &#125;</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">for</span> (TypeFilter tf : <span class="keyword">this</span>.includeFilters) &#123;</div><div class="line">      <span class="keyword">if</span> (tf.match(metadataReader, <span class="keyword">this</span>.metadataReaderFactory)) &#123;</div><div class="line">         <span class="keyword">return</span> isConditionMatch(metadataReader);</div><div class="line">      &#125;</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>可以看到 首先 对 exclude-filter 进行黑名单过滤；然后对 include-filter 进行白名单过滤；否则默认排除。<br>此时问题的根源就找到了：  use-default-filter设置成false 即可解决问题。</p>
+</blockquote>
+<hr>
+<blockquote>
+<ul>
+<li>如果同时配置，必须先配置<code>&lt;context:include-filter/&gt;</code>，然后载配置 <code>&lt;context:exclude-filter/&gt;</code>，否则报错。<br><img src="/uploads/springAnnotation1.png" alt="Alt text"></li>
+</ul>
+</blockquote>
+<p>原因：在<code>spring-context-3.0.xsd</code> 中 <code>component-scan</code> 元素定义如下，  其中  <code>xsd:sequence</code> 定义的是  元素的次序，so……<br><img src="/uploads/springAnnotation2.png" alt="Alt text"></p>
+<p>参考文档：<a href="http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#beans-annotation-config" target="_blank" rel="external">spring-beans-annotation-config</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring-Annotation/" rel="tag">#Spring Annotation</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/23/Spring事件驱动模型/" rel="next" title="Spring事件驱动模型">
+                <i class="fa fa-chevron-left"></i> Spring事件驱动模型
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/07/02/Spring启用注解的两种方式/"
+           data-title="Spring启用注解的两种方式" data-url="http://fengshao0907.github.com/2017/07/02/Spring启用注解的两种方式/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/头像.jpg"
+               alt="Mr岳" />
+          <p class="site-author-name" itemprop="name">Mr岳</p>
+          <p class="site-description motion-element" itemprop="description">There are no two identical leaves in the world.</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/fengshao0907" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/3085325177/profile" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/xiaoxiaoye" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  知乎
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://macshuo.com/" title="MacTalk" target="_blank">MacTalk</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="HeDengCheng" target="_blank">HeDengCheng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://mysql.taobao.org/monthly/2016/06/" title="数据库内核月报" target="_blank">数据库内核月报</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://es.xiaoleilu.com/" title="ElasticSearch" target="_blank">ElasticSearch</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#lt-context-annotation-config-gt"><span class="nav-number">1.</span> <span class="nav-text"><context:annotation-config></span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lt-context-component-scan-gt"><span class="nav-number">2.</span> <span class="nav-text"><context:component-scan></span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#use-default-filters-属性"><span class="nav-number">3.</span> <span class="nav-text">use-default-filters 属性</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2013 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr岳</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"fengshao0907"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+  </script>
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+    });
+  </script>
+  <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("kTtTzkfBK0h3Db6QELtFmMYq-gzGzoHsz", "7iLht0UC6uCiSqVTjzy8QUc4");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+</body>
+</html>
