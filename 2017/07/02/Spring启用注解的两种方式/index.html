@@ -92,7 +92,7 @@
 <meta property="og:description" content="Spring的context命名空间提供两个非常重要的注解 &amp;lt;context:annotation-config&amp;gt;和&amp;lt;context:component-scan&amp;gt;">
 <meta property="og:image" content="http://fengshao0907.github.com/uploads/springAnnotation1.png">
 <meta property="og:image" content="http://fengshao0907.github.com/uploads/springAnnotation2.png">
-<meta property="og:updated_time" content="2017-07-02T10:01:03.000Z">
+<meta property="og:updated_time" content="2017-07-02T10:04:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring启用注解的两种方式">
 <meta name="twitter:description" content="Spring的context命名空间提供两个非常重要的注解 &amp;lt;context:annotation-config&amp;gt;和&amp;lt;context:component-scan&amp;gt;">
@@ -336,7 +336,7 @@
 
       
         <p>Spring的context命名空间提供两个非常重要的注解 <code>&lt;context:annotation-config&gt;</code>和<code>&lt;context:component-scan&gt;</code><br><a id="more"></a></p>
-<h1 id="lt-context-annotation-config-gt"><a href="#lt-context-annotation-config-gt" class="headerlink" title="&lt;context:annotation-config&gt;"></a><code>&lt;context:annotation-config&gt;</code></h1><blockquote>
+<h1 id="context-annotation-config"><a href="#context-annotation-config" class="headerlink" title="context:annotation-config"></a><code>context:annotation-config</code></h1><blockquote>
 <p><code>&lt;context:annotation-config&gt;</code>的作用是 显示地向Spring容器中注册以下4个BeanPostProcessor，激活已经通过xml注册过的Bean，之后应用就可以通过注解直接使用Bean。</p>
 <ul>
 <li>AutowiredAnnotationBeanPostProcessor</li>
@@ -363,7 +363,7 @@
 <blockquote>
 <p>如果想使用以上注解，需要直接在Spring配置文件中定义这些Bean，显然这种方式比较笨拙，也不够优雅。Spring为我们提供了一种极为方便注册这些BeanPostProcessor的方式，如下，它会隐式地向 Spring容器注册上述BeanPostProcessor。<code>&lt;context:annotation-config/&gt;</code></p>
 </blockquote>
-<h1 id="lt-context-component-scan-gt"><a href="#lt-context-component-scan-gt" class="headerlink" title="&lt;context:component-scan&gt;"></a><code>&lt;context:component-scan&gt;</code></h1><p><strong><code>&lt;context:component-scan&gt;</code> 除了具有<code>&lt;context:annotation-config/&gt;</code>的作用外，还具有以下作用</strong>：</p>
+<h1 id="context-component-scan"><a href="#context-component-scan" class="headerlink" title="context:component-scan"></a>context:component-scan</h1><p><strong><code>&lt;context:component-scan&gt;</code> 除了具有<code>&lt;context:annotation-config/&gt;</code>的作用外，还具有以下作用</strong>：</p>
 <blockquote>
 <ul>
 <li>通过base-package属性执行一个需要扫描的基类包，Spring容器将会扫描这个基类包里的所有类并从类的注解(@Component @Controller@Service等)信息中获取Bean的定义信息。</li>
@@ -695,7 +695,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#lt-context-annotation-config-gt"><span class="nav-number">1.</span> <span class="nav-text"><context:annotation-config></span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lt-context-component-scan-gt"><span class="nav-number">2.</span> <span class="nav-text"><context:component-scan></span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#use-default-filters-属性"><span class="nav-number">3.</span> <span class="nav-text">use-default-filters 属性</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#context-annotation-config"><span class="nav-number">1.</span> <span class="nav-text">context:annotation-config</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#context-component-scan"><span class="nav-number">2.</span> <span class="nav-text">context:component-scan</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#use-default-filters-属性"><span class="nav-number">3.</span> <span class="nav-text">use-default-filters 属性</span></a></li></ol></div>
             
           </div>
         </section>
