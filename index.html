@@ -338,8 +338,7 @@
       
         
           
-            <p>Spring事件驱动模型</p>
-<h2 id="一、事件驱动模型-实例"><a href="#一、事件驱动模型-实例" class="headerlink" title="一、事件驱动模型 实例"></a>一、事件驱动模型 实例</h2><blockquote>
+            <h1 id="一、事件驱动模型-实例"><a href="#一、事件驱动模型-实例" class="headerlink" title="一、事件驱动模型 实例"></a>一、事件驱动模型 实例</h1><blockquote>
 <p> 首先看一个我们在项目中基本都会涉及到的 实例 ：用户注册。<br>用户注册成功后，需要做的事情： 增加积分、发确认邮件、发送各种券、对用户数据进行索引等等……. 一般情况下会做如下设计：<br><img src="/uploads/eventModelDemo.png" alt="Alt text"></p>
 </blockquote>
 <p>那么这样的设计都存在哪些问题呢？</p>
@@ -359,8 +358,7 @@
 <p>这其中 既 使用了<code>DIP</code>（依赖倒置原则，依赖于抽象，而不是具体 ) , 又使用了IoC思想，即以前主动去创建它依赖的<code>Service</code>，现在只是被动等待别人注册进来。主要目的就是：松散耦合对象间的一对多的依赖关系。</p>
 </blockquote>
 <p>接下来设计模式之观察者模式。</p>
-<p>#二、 观察者模式</p>
-<ol>
+<h1 id="二、-观察者模式"><a href="#二、-观察者模式" class="headerlink" title="二、 观察者模式"></a>二、 观察者模式</h1><ol>
 <li>观察者模式的定义</li>
 </ol>
 <blockquote>
