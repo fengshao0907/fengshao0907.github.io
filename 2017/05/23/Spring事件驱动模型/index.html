@@ -84,45 +84,24 @@
 
 
 
-<meta name="description" content="一、事件驱动模型 实例
- 首先看一个我们在项目中基本都会涉及到的 实例 ：用户注册。用户注册成功后，需要做的事情： 增加积分、发确认邮件、发送各种券、对用户数据进行索引等等……. 一般情况下会做如下设计：
-
-那么这样的设计都存在哪些问题呢？
-
-
-UserService和 其他Service耦合严重，若想在增加功能或者删减功能 都比较麻烦；
-有些功能可能需要调用第三方系统，如 增加积分、索引用户、发">
+<meta name="description" content="JAVA事件模型与Spring事件机制学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring事件驱动模型">
-<meta property="og:url" content="http://yoursite.com/2017/05/23/Spring事件驱动模型/index.html">
+<meta property="og:url" content="http://fengshao0907.github.com/2017/05/23/Spring事件驱动模型/index.html">
 <meta property="og:site_name" content="Mr岳的技术博客">
-<meta property="og:description" content="一、事件驱动模型 实例
- 首先看一个我们在项目中基本都会涉及到的 实例 ：用户注册。用户注册成功后，需要做的事情： 增加积分、发确认邮件、发送各种券、对用户数据进行索引等等……. 一般情况下会做如下设计：
-
-那么这样的设计都存在哪些问题呢？
-
-
-UserService和 其他Service耦合严重，若想在增加功能或者删减功能 都比较麻烦；
-有些功能可能需要调用第三方系统，如 增加积分、索引用户、发">
-<meta property="og:image" content="http://yoursite.com/uploads/eventModelDemo.png">
-<meta property="og:image" content="http://yoursite.com/uploads/eventModelDemo2.png">
-<meta property="og:image" content="http://yoursite.com/uploads/result1.png">
-<meta property="og:image" content="http://yoursite.com/uploads/result2.png">
-<meta property="og:image" content="http://yoursite.com/uploads/PropertyEditorSupport.png">
-<meta property="og:image" content="http://yoursite.com/uploads/springEvent.png">
-<meta property="og:image" content="http://yoursite.com/uploads/spring2.png">
-<meta property="og:updated_time" content="2017-07-02T09:02:44.000Z">
+<meta property="og:description" content="JAVA事件模型与Spring事件机制学习">
+<meta property="og:image" content="http://fengshao0907.github.com/uploads/eventModelDemo.png">
+<meta property="og:image" content="http://fengshao0907.github.com/uploads/eventModelDemo2.png">
+<meta property="og:image" content="http://fengshao0907.github.com/uploads/result1.png">
+<meta property="og:image" content="http://fengshao0907.github.com/uploads/result2.png">
+<meta property="og:image" content="http://fengshao0907.github.com/uploads/PropertyEditorSupport.png">
+<meta property="og:image" content="http://fengshao0907.github.com/uploads/springEvent.png">
+<meta property="og:image" content="http://fengshao0907.github.com/uploads/spring2.png">
+<meta property="og:updated_time" content="2017-07-02T09:08:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring事件驱动模型">
-<meta name="twitter:description" content="一、事件驱动模型 实例
- 首先看一个我们在项目中基本都会涉及到的 实例 ：用户注册。用户注册成功后，需要做的事情： 增加积分、发确认邮件、发送各种券、对用户数据进行索引等等……. 一般情况下会做如下设计：
-
-那么这样的设计都存在哪些问题呢？
-
-
-UserService和 其他Service耦合严重，若想在增加功能或者删减功能 都比较麻烦；
-有些功能可能需要调用第三方系统，如 增加积分、索引用户、发">
-<meta name="twitter:image" content="http://yoursite.com/uploads/eventModelDemo.png">
+<meta name="twitter:description" content="JAVA事件模型与Spring事件机制学习">
+<meta name="twitter:image" content="http://fengshao0907.github.com/uploads/eventModelDemo.png">
 
 
 
@@ -143,7 +122,7 @@ UserService和 其他Service耦合严重，若想在增加功能或者删减功�
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/05/23/Spring事件驱动模型/"/>
+  <link rel="canonical" href="http://fengshao0907.github.com/2017/05/23/Spring事件驱动模型/"/>
 
   <title> Spring事件驱动模型 | Mr岳的技术博客 </title>
 </head>
@@ -361,7 +340,8 @@ UserService和 其他Service耦合严重，若想在增加功能或者删减功�
       
 
       
-        <h1 id="一、事件驱动模型-实例"><a href="#一、事件驱动模型-实例" class="headerlink" title="一、事件驱动模型 实例"></a>一、事件驱动模型 实例</h1><blockquote>
+        <p>JAVA事件模型与Spring事件机制学习<br><a id="more"></a></p>
+<h1 id="一、事件驱动模型-实例"><a href="#一、事件驱动模型-实例" class="headerlink" title="一、事件驱动模型 实例"></a>一、事件驱动模型 实例</h1><blockquote>
 <p> 首先看一个我们在项目中基本都会涉及到的 实例 ：用户注册。<br>用户注册成功后，需要做的事情： 增加积分、发确认邮件、发送各种券、对用户数据进行索引等等……. 一般情况下会做如下设计：<br><img src="/uploads/eventModelDemo.png" alt="Alt text"></p>
 </blockquote>
 <p>那么这样的设计都存在哪些问题呢？</p>
@@ -611,7 +591,7 @@ UserService和 其他Service耦合严重，若想在增加功能或者删减功�
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2017/05/23/Spring事件驱动模型/"
-           data-title="Spring事件驱动模型" data-url="http://yoursite.com/2017/05/23/Spring事件驱动模型/">
+           data-title="Spring事件驱动模型" data-url="http://fengshao0907.github.com/2017/05/23/Spring事件驱动模型/">
       </div>
     
   </div>
